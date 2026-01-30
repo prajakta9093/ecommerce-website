@@ -1,0 +1,18 @@
+/* Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* Tailwind Layers */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global font */
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Active NavLink style */
+.active {
+    background-color: #e5e7eb;  /* Tailwind gray-200 */
+    border-color: #9ca3af;      /* Tailwind gray-400 */
+}

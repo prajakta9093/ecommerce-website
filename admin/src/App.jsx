@@ -6,6 +6,7 @@ import Sidebar from "./components/Sidebar";
 import Add from "./pages/Add";
 import List from "./pages/List";
 import Orders from "./pages/Orders";
+import api from "./utils/api";
 
 const App = () => {
   const [token, setToken] = useState(""); // Start with no token
@@ -14,7 +15,27 @@ const App = () => {
     localStorage.removeItem("adminToken");
     setToken("");
   };
-
+const handleAdminLogin = async (email, password) => {
+  try {
+    const response = await api.post('/api/user/admin', {
+      email,
+      password
+    });
+    
+    if (response.data.success && response.data.token) {
+      // Save token
+      localStorage.setItem('adminToken', response.data.token);
+      // Or use 'token' if your code uses that
+      localStorage.setItem('token', response.data.token);
+      
+      // Redirect to dashboard
+      window.location.href = '/dashboard';
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    alert(error.response?.data?.message || 'Login failed');
+  }
+};
   // If no token, show login page ONLY
   if (!token) {
     return <Login setToken={setToken} />;

@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const backendUrl = "http://localhost:9000";
+const backendUrl = import.meta.env.VITE_BACKENDURL;
 
 const Placeorder = () => {
   const { products, cartitems, getCartAmount, delivery_fee, clearCart } =

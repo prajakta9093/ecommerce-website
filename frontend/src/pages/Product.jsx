@@ -10,7 +10,7 @@ const Product = () => {
   const [added, setAdded] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
 
-  const backendUrl = "http://localhost:9000";
+  const backendUrl = import.meta.env.VITE_BACKENDURL;
 
   const product = products.find((p) => String(p._id) === id);
 

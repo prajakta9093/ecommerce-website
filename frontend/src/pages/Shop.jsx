@@ -9,7 +9,7 @@ const Shop = () => {
   const [category, setCategory] = useState([]);
   const [showCategory, setShowCategory] = useState(true);
 
-  const backendUrl = "http://localhost:9000";
+  const backendUrl = import.meta.env.VITE_BACKENDURL;
   const categories = ["Hoops", "Paintings", "Crochet", "Hair Accessoires"];
 
   // Helper function to get image URL safely

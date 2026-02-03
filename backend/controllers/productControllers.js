@@ -1,4 +1,22 @@
 import productModel from "../models/productModels.js";
+import { v2 as cloudinary } from "cloudinary";
+
+// Helper function to upload to Cloudinary
+const uploadToCloudinary = (fileBuffer) => {
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        folder: "ecommerce-products",
+        resource_type: "auto",
+      },
+      (error, result) => {
+        if (error) reject(error);
+        else resolve(result);
+      }
+    );
+    uploadStream.end(fileBuffer);
+  });
+};
 
 const addProduct = async (req, res) => {
   try {
@@ -10,10 +28,28 @@ const addProduct = async (req, res) => {
 
     const images = [];
 
-    if (req.files?.image1) images.push(req.files.image1[0].path.replace(/\\/g, '/'));
-    if (req.files?.image2) images.push(req.files.image2[0].path.replace(/\\/g, '/'));
-    if (req.files?.image3) images.push(req.files.image3[0].path.replace(/\\/g, '/'));
-    if (req.files?.image4) images.push(req.files.image4[0].path.replace(/\\/g, '/'));
+    // Upload each image to Cloudinary
+    try {
+      if (req.files?.image1) {
+        const result = await uploadToCloudinary(req.files.image1[0].buffer);
+        images.push(result.secure_url);
+      }
+      if (req.files?.image2) {
+        const result = await uploadToCloudinary(req.files.image2[0].buffer);
+        images.push(result.secure_url);
+      }
+      if (req.files?.image3) {
+        const result = await uploadToCloudinary(req.files.image3[0].buffer);
+        images.push(result.secure_url);
+      }
+      if (req.files?.image4) {
+        const result = await uploadToCloudinary(req.files.image4[0].buffer);
+        images.push(result.secure_url);
+      }
+    } catch (uploadError) {
+      console.log("❌ Cloudinary upload error:", uploadError);
+      return res.json({ success: false, message: "Image upload failed" });
+    }
 
     if (images.length === 0) {
       return res.json({ success: false, message: "At least 1 image required" });
@@ -24,7 +60,7 @@ const addProduct = async (req, res) => {
       description,
       price,
       category,
-      images,
+      images, // Full Cloudinary URLs
       date: Date.now(),
     });
 
@@ -60,6 +96,20 @@ const removeProduct = async (req, res) => {
         success: false,
         message: "Product not found",
       });
+    }
+
+    // Optional: Delete images from Cloudinary
+    try {
+      for (let imageUrl of product.images) {
+        // Extract public_id from Cloudinary URL
+        const parts = imageUrl.split('/');
+        const filename = parts[parts.length - 1].split('.')[0];
+        const publicId = `ecommerce-products/${filename}`;
+        await cloudinary.uploader.destroy(publicId);
+      }
+    } catch (error) {
+      console.log("⚠️ Warning: Could not delete images from Cloudinary:", error);
+      // Continue with product deletion even if image deletion fails
     }
 
     await productModel.findByIdAndDelete(id);

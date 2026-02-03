@@ -1,36 +1,17 @@
 import multer from "multer";
-import path from "path";
 
-// Storage configuration
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/"); // folder must exist
-  },
-
-  filename: function (req, file, cb) {
-    const uniqueName =
-      Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(
-      null,
-      uniqueName + path.extname(file.originalname)
-    );
-  },
-});
+// Use memory storage instead of disk storage
+const storage = multer.memoryStorage();
 
 // File filter (accept images only)
 const fileFilter = (req, file, cb) => {
   const allowedTypes = /jpeg|jpg|png|webp/;
-  const ext = allowedTypes.test(
-    path.extname(file.originalname).toLowerCase()
-  );
   const mime = allowedTypes.test(file.mimetype);
 
-  if (ext && mime) {
+  if (mime) {
     cb(null, true);
   } else {
-    cb(
-      new Error("Only image files are allowed (jpg, png, webp)")
-    );
+    cb(new Error("Only image files are allowed (jpg, png, webp)"));
   }
 };
 

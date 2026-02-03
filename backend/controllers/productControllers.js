@@ -1,5 +1,9 @@
 import productModel from "../models/productModels.js";
+import cloudinary from "cloudinary";
 
+/* =========================
+   ADD PRODUCT
+========================= */
 const addProduct = async (req, res) => {
   try {
     const { name, description, price, category } = req.body;
@@ -9,11 +13,19 @@ const addProduct = async (req, res) => {
     }
 
     const images = [];
+    const imageFields = ["image1", "image2", "image3", "image4"];
 
-    if (req.files?.image1) images.push(req.files.image1[0].path.replace(/\\/g, '/'));
-    if (req.files?.image2) images.push(req.files.image2[0].path.replace(/\\/g, '/'));
-    if (req.files?.image3) images.push(req.files.image3[0].path.replace(/\\/g, '/'));
-    if (req.files?.image4) images.push(req.files.image4[0].path.replace(/\\/g, '/'));
+    for (const field of imageFields) {
+      if (req.files?.[field]) {
+        const filePath = req.files[field][0].path;
+
+        const result = await cloudinary.uploader.upload(filePath, {
+          folder: "products",
+        });
+
+        images.push(result.secure_url);
+      }
+    }
 
     if (images.length === 0) {
       return res.json({ success: false, message: "At least 1 image required" });
@@ -24,7 +36,7 @@ const addProduct = async (req, res) => {
       description,
       price,
       category,
-      images,
+      images, // ✅ Cloudinary URLs
       date: Date.now(),
     });
 
@@ -35,20 +47,27 @@ const addProduct = async (req, res) => {
     });
 
   } catch (error) {
-    console.log("❌ Add product error:", error);
+    console.error("❌ Add product error:", error);
     res.json({ success: false, message: "Server error" });
   }
 };
 
+/* =========================
+   LIST PRODUCTS
+========================= */
 const listProducts = async (req, res) => {
   try {
     const products = await productModel.find({});
     res.json({ success: true, products });
   } catch (error) {
+    console.error("❌ List products error:", error);
     res.json({ success: false, message: "Failed to fetch products" });
   }
 };
 
+/* =========================
+   REMOVE PRODUCT
+========================= */
 const removeProduct = async (req, res) => {
   try {
     const { id } = req.params;
@@ -60,6 +79,12 @@ const removeProduct = async (req, res) => {
         success: false,
         message: "Product not found",
       });
+    }
+
+    // Optional: delete images from Cloudinary
+    for (const img of product.images) {
+      const publicId = img.split("/").pop().split(".")[0];
+      await cloudinary.uploader.destroy(`products/${publicId}`);
     }
 
     await productModel.findByIdAndDelete(id);
@@ -78,11 +103,15 @@ const removeProduct = async (req, res) => {
   }
 };
 
+/* =========================
+   SINGLE PRODUCT
+========================= */
 const singleProduct = async (req, res) => {
   try {
     const product = await productModel.findById(req.params.id);
     res.json({ success: true, product });
   } catch (error) {
+    console.error("❌ Single product error:", error);
     res.json({ success: false, message: "Product not found" });
   }
 };

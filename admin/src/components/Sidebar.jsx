@@ -43,6 +43,19 @@ const Sidebar = () => {
         )}
         <span>Orders</span>
       </NavLink>
+      <NavLink
+  to="/custom-orders"
+  className={({ isActive }) =>
+    `flex items-center gap-3 px-3 py-2 rounded-md border
+     ${isActive ? "bg-gray-200" : "hover:bg-gray-100"}`
+  }
+>
+  {assets.order_icon && (
+    <img src={assets.order_icon} className="w-6" />
+  )}
+  <span>Custom Orders</span>
+</NavLink>
+
     </div>
   );
 };

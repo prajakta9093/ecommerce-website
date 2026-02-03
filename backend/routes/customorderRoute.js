@@ -1,15 +1,19 @@
 import express from "express";
-import CustomOrder from "../models/customorderModels.js";
+import {
+  createCustomOrder,
+  listCustomOrders,
+  deleteCustomOrder,
+} from "../controllers/customorderController.js";
 
 const router = express.Router();
 
-router.post("/", async (req, res) => {
-  try {
-    await CustomOrder.create(req.body);
-    res.json({ success: true });
-  } catch (err) {
-    res.status(500).json({ success: false });
-  }
-});
+/* CREATE - User submits a custom order */
+router.post("/", createCustomOrder);
+
+/* LIST - Admin fetches all custom orders */
+router.get("/list", listCustomOrders);
+
+/* DELETE - Admin deletes a custom order by ID */
+router.post("/remove/:id", deleteCustomOrder);
 
 export default router;

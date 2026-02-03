@@ -83,11 +83,7 @@ const Navbar = () => {
       {/* Right Icons */}
       <div className='flex items-center gap-6'>
         
-        <img 
-          src={search_icon} 
-          className='w-5 cursor-pointer hover:scale-110 transition' 
-          alt="search"
-        />
+      
 
         {/* Profile Dropdown */}
         <div className='relative' ref={dropdownRef}>

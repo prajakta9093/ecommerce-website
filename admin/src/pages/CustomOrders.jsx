@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const backendUrl = "http://localhost:9000"; // ✅ Fixed: hardcoded like admin Orders page
+const backendUrl = import.meta.env.VITE_BACKENDURL; // ✅ Fixed: hardcoded like admin Orders page
 
 const CustomOrders = () => {
   const [orders, setOrders] = useState([]);

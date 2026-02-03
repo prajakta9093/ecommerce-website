@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const backendUrl = "http://localhost:9000";
+const backendUrl = import.meta.env.VITE_BACKENDURL;
 
 const Orders = ({ onLogout }) => {
   const [orders, setOrders] = useState([]);

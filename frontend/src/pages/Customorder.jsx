@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 
-const backendUrl = "http://localhost:9000"; // ✅ Fixed: hardcoded like Orders page
+const backendUrl = import.meta.env.VITE_BACKENDURL; // ✅ Fixed: hardcoded like Orders page
 
 const Customorder = () => {
   const [formData, setFormData] = useState({

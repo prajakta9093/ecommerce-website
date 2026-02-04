@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+
 const backendUrl = import.meta.env.VITE_BACKENDURL;
 
 const List = () => {
+    console.log("Backend URL:", backendUrl);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 

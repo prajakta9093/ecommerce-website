@@ -18,17 +18,17 @@ import {
 
 const router = express.Router();
 
-// User routes
+// User
 router.post("/place", authMiddleware, placeOrder);
 router.get("/user", authMiddleware, getUserOrders);
 router.get("/user/:orderId", authMiddleware, getSingleOrder);
 router.put("/cancel/:orderId", authMiddleware, cancelOrder);
 
-// ✅ Razorpay routes - THESE MATCH YOUR FRONTEND
+// Razorpay
 router.post("/create-razorpay-order", authMiddleware, createRazorpayOrder);
 router.post("/verify-razorpay-payment", authMiddleware, verifyRazorpayPayment);
 
-// Admin routes
+// Admin
 router.get("/all", adminAuth, getAllOrders);
 router.put("/status/:orderId", adminAuth, updateOrderStatus);
 

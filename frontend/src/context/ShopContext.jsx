@@ -5,7 +5,7 @@ export const ShopContext = createContext();
 
 const ShopContextProvider = ({ children }) => {
   const currency = "₹";
-  const delivery_fee = 50;
+  const delivery_fee = 1;
   const backendUrl = import.meta.env.VITE_BACKENDURL; 
 
   const [products, setProducts] = useState([]);

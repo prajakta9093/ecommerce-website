@@ -19,7 +19,7 @@ const orderSchema = new mongoose.Schema(
     ],
 
     totalAmount: { type: Number, required: true },
-    deliveryFee: { type: Number, default: 50 },
+    deliveryFee: { type: Number, default: 1 },
 
     shippingAddress: {
       firstName: String,

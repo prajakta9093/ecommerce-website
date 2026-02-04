@@ -23,12 +23,61 @@ const Placeorder = () => {
   });
   const [paymentMethod, setPaymentMethod] = useState("COD");
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({}); // ✅ NEW: Track validation errors
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
+    
+    // ✅ NEW: Clear error for this field when user starts typing
+    if (errors[e.target.name]) {
+      setErrors({
+        ...errors,
+        [e.target.name]: "",
+      });
+    }
+  };
+
+  // ✅ NEW: Validate form data
+  const validateForm = () => {
+    const newErrors = {};
+
+    // Required fields validation
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = "First name is required";
+    }
+    if (!formData.lastName.trim()) {
+      newErrors.lastName = "Last name is required";
+    }
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Email is invalid";
+    }
+    if (!formData.phone.trim()) {
+      newErrors.phone = "Phone number is required";
+    } else if (!/^\d{10}$/.test(formData.phone.replace(/\s/g, ""))) {
+      newErrors.phone = "Phone number must be 10 digits";
+    }
+    if (!formData.address.trim()) {
+      newErrors.address = "Address is required";
+    }
+    if (!formData.city.trim()) {
+      newErrors.city = "City is required";
+    }
+    if (!formData.state.trim()) {
+      newErrors.state = "State is required";
+    }
+    if (!formData.pincode.trim()) {
+      newErrors.pincode = "Pincode is required";
+    } else if (!/^\d{6}$/.test(formData.pincode)) {
+      newErrors.pincode = "Pincode must be 6 digits";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   // Load Razorpay script
@@ -135,6 +184,12 @@ const Placeorder = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // ✅ NEW: Validate form before proceeding
+    if (!validateForm()) {
+      alert("Please fill in all required fields correctly");
+      return;
+    }
+
     const token = localStorage.getItem("token");
     if (!token) {
       alert("Please login to place order");
@@ -214,88 +269,138 @@ const Placeorder = () => {
             <h2 className="text-xl font-semibold mb-4">
               Shipping Information
             </h2>
-            <div className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
-                <input
-                  type="text"
-                  name="firstName"
-                  placeholder="First Name"
-                  className="p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                  value={formData.firstName}
-                  onChange={handleChange}
-                  required
-                />
-                <input
-                  type="text"
-                  name="lastName"
-                  placeholder="Last Name"
-                  className="p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                  required
-                />
+                <div>
+                  <input
+                    type="text"
+                    name="firstName"
+                    placeholder="First Name *"
+                    className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none ${
+                      errors.firstName ? "border-red-500" : ""
+                    }`}
+                    value={formData.firstName}
+                    onChange={handleChange}
+                  />
+                  {errors.firstName && (
+                    <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>
+                  )}
+                </div>
+                <div>
+                  <input
+                    type="text"
+                    name="lastName"
+                    placeholder="Last Name *"
+                    className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none ${
+                      errors.lastName ? "border-red-500" : ""
+                    }`}
+                    value={formData.lastName}
+                    onChange={handleChange}
+                  />
+                  {errors.lastName && (
+                    <p className="text-red-500 text-xs mt-1">{errors.lastName}</p>
+                  )}
+                </div>
               </div>
 
-              <input
-                type="email"
-                name="email"
-                placeholder="Email"
-                className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-
-              <input
-                type="tel"
-                name="phone"
-                placeholder="Phone Number"
-                className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                value={formData.phone}
-                onChange={handleChange}
-                required
-              />
-
-              <textarea
-                name="address"
-                placeholder="Address"
-                className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                rows="3"
-                value={formData.address}
-                onChange={handleChange}
-                required
-              />
-
-              <div className="grid grid-cols-2 gap-4">
+              <div>
                 <input
-                  type="text"
-                  name="city"
-                  placeholder="City"
-                  className="p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                  value={formData.city}
+                  type="email"
+                  name="email"
+                  placeholder="Email *"
+                  className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none ${
+                    errors.email ? "border-red-500" : ""
+                  }`}
+                  value={formData.email}
                   onChange={handleChange}
-                  required
                 />
-                <input
-                  type="text"
-                  name="state"
-                  placeholder="State"
-                  className="p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                  value={formData.state}
-                  onChange={handleChange}
-                  required
-                />
+                {errors.email && (
+                  <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+                )}
               </div>
 
-              <input
-                type="text"
-                name="pincode"
-                placeholder="Pincode"
-                className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                value={formData.pincode}
-                onChange={handleChange}
-                required
-              />
+              <div>
+                <input
+                  type="tel"
+                  name="phone"
+                  placeholder="Phone Number (10 digits) *"
+                  className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none ${
+                    errors.phone ? "border-red-500" : ""
+                  }`}
+                  value={formData.phone}
+                  onChange={handleChange}
+                  maxLength="10"
+                />
+                {errors.phone && (
+                  <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
+                )}
+              </div>
+
+              <div>
+                <textarea
+                  name="address"
+                  placeholder="Address *"
+                  className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none ${
+                    errors.address ? "border-red-500" : ""
+                  }`}
+                  rows="3"
+                  value={formData.address}
+                  onChange={handleChange}
+                />
+                {errors.address && (
+                  <p className="text-red-500 text-xs mt-1">{errors.address}</p>
+                )}
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <input
+                    type="text"
+                    name="city"
+                    placeholder="City *"
+                    className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none ${
+                      errors.city ? "border-red-500" : ""
+                    }`}
+                    value={formData.city}
+                    onChange={handleChange}
+                  />
+                  {errors.city && (
+                    <p className="text-red-500 text-xs mt-1">{errors.city}</p>
+                  )}
+                </div>
+                <div>
+                  <input
+                    type="text"
+                    name="state"
+                    placeholder="State *"
+                    className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none ${
+                      errors.state ? "border-red-500" : ""
+                    }`}
+                    value={formData.state}
+                    onChange={handleChange}
+                  />
+                  {errors.state && (
+                    <p className="text-red-500 text-xs mt-1">{errors.state}</p>
+                  )}
+                </div>
+              </div>
+
+              <div>
+                <input
+                  type="text"
+                  name="pincode"
+                  placeholder="Pincode (6 digits) *"
+                  className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none ${
+                    errors.pincode ? "border-red-500" : ""
+                  }`}
+                  value={formData.pincode}
+                  onChange={handleChange}
+                  maxLength="6"
+                />
+                {errors.pincode && (
+                  <p className="text-red-500 text-xs mt-1">{errors.pincode}</p>
+                )}
+              </div>
 
               {/* Payment Methods */}
               <div className="mt-6">
@@ -344,7 +449,7 @@ const Placeorder = () => {
               </div>
 
               <button
-                onClick={handleSubmit}
+                type="submit"
                 disabled={loading}
                 className="w-full bg-green-600 text-white py-4 rounded-lg font-semibold text-lg hover:bg-green-700 disabled:bg-gray-400 transition mt-6 shadow-lg"
               >
@@ -354,7 +459,12 @@ const Placeorder = () => {
                   ? "Proceed to Payment →"
                   : "Place Order"}
               </button>
-            </div>
+              
+              {/* ✅ NEW: Required fields note */}
+              <p className="text-xs text-gray-500 text-center mt-2">
+                * Required fields
+              </p>
+            </form>
           </div>
 
           {/* Order Summary */}

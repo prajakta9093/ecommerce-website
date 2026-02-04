@@ -28,8 +28,24 @@ const Product = () => {
     setTimeout(() => setAdded(false), 1200);
   };
 
-  // Get images array (support both 'images' and 'image')
+  // ✅ FIXED: Get images array (support both 'images' and 'image')
   const imageArray = product.images || product.image || [];
+
+  // ✅ NEW: Helper function to get correct image URL (Cloudinary or local)
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) {
+      return "https://via.placeholder.com/400x400?text=No+Image";
+    }
+
+    // If it's a Cloudinary URL (starts with http), return as-is
+    if (imagePath.startsWith('http')) {
+      return imagePath;
+    }
+
+    // For local uploads, normalize path and prepend backend URL
+    const normalizedPath = imagePath.replace(/\\/g, '/');
+    return `${backendUrl}/${normalizedPath}`;
+  };
 
   return (
     <>
@@ -39,13 +55,13 @@ const Product = () => {
         {/* Image Gallery */}
         <div className="flex-1">
           <img
-            src={
-              imageArray[currentImage] 
-                ? `${backendUrl}/${imageArray[currentImage]}`
-                : "https://via.placeholder.com/400x400?text=No+Image"
-            }
+            src={getImageUrl(imageArray[currentImage])}
             alt={product.name}
             className="w-full rounded-lg object-cover"
+            onError={(e) => {
+              console.log("❌ Main image failed:", e.target.src);
+              e.target.src = "https://via.placeholder.com/400x400?text=No+Image";
+            }}
           />
           
           {/* Thumbnail Images */}
@@ -54,7 +70,7 @@ const Product = () => {
               {imageArray.map((img, index) => (
                 <img
                   key={index}
-                  src={`${backendUrl}/${img}`}
+                  src={getImageUrl(img)}
                   alt={`${product.name} ${index + 1}`}
                   onClick={() => setCurrentImage(index)}
                   className={`w-20 h-20 rounded-lg object-cover cursor-pointer border-2 transition ${
@@ -62,6 +78,10 @@ const Product = () => {
                       ? "border-purple-600"
                       : "border-gray-300 hover:border-purple-400"
                   }`}
+                  onError={(e) => {
+                    console.log("❌ Thumbnail failed:", e.target.src);
+                    e.target.src = "https://via.placeholder.com/80x80?text=No+Image";
+                  }}
                 />
               ))}
             </div>

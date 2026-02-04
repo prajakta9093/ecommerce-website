@@ -12,7 +12,7 @@ const Shop = () => {
   const backendUrl = import.meta.env.VITE_BACKENDURL;
   const categories = ["Hoops", "Paintings", "Crochet", "Hair Accessoires"];
 
-  // Helper function to get image URL safely
+  // ✅ FIXED: Helper function to get image URL safely (handles Cloudinary + local)
   const getImageUrl = (product) => {
     // Check for both 'images' (backend) and 'image' (possible old data)
     const imageArray = product.images || product.image;
@@ -38,9 +38,14 @@ const Shop = () => {
       return "https://via.placeholder.com/400x400?text=No+Image";
     }
     
-    // Backend saves paths as "uploads/filename.jpg" (with forward slashes)
-    // Just prepend the backend URL with a forward slash
-    const finalUrl = `${backendUrl}/${imagePath}`;
+    // ✅ NEW: Check if it's a Cloudinary URL (starts with http)
+    if (imagePath.startsWith('http')) {
+      return imagePath; // Return Cloudinary URL as-is
+    }
+    
+    // ✅ For local uploads, normalize path and prepend backend URL
+    const normalizedPath = imagePath.replace(/\\/g, '/');
+    const finalUrl = `${backendUrl}/${normalizedPath}`;
     
     return finalUrl;
   };

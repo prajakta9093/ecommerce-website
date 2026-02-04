@@ -21,11 +21,6 @@ const App = () => {
     }
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("adminToken");
-    setToken("");
-  };
-
   // 🔒 If not logged in → only login page
   if (!token) {
     return <Login setToken={setToken} />;
@@ -33,7 +28,7 @@ const App = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar onLogout={handleLogout} />
+      <Navbar setToken={setToken} />
       <div className="flex">
         <Sidebar />
         <div className="flex-1 p-6">

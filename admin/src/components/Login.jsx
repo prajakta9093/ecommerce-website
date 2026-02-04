@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const backendUrl = "http://localhost:9000";
+const backendUrl = import.meta.env.VITE_BACKENDURL; 
 
 const Login = ({ setToken }) => {
   const [email, setEmail] = useState("");

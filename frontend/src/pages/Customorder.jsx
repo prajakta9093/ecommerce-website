@@ -79,99 +79,114 @@ const Customorder = () => {
     }
   };
 
-  return (
-    <>
-      <Navbar />
-      <div className="px-10 py-20 flex flex-col lg:flex-row gap-14">
+return (
+  <>
+    <Navbar />
 
-        {/* Left */}
-        <div className="w-full lg:w-1/2">
-          <p className="text-lg">
-            Looking for something special? Tell us your idea 💕
-          </p>
+    {/* Main Wrapper */}
+    <div className="px-4 py-10 sm:px-8 lg:px-10 lg:py-20 
+                    flex flex-col lg:flex-row gap-8 lg:gap-14 
+                    max-w-6xl mx-auto">
+
+      {/* Left */}
+      <div className="w-full lg:w-1/2">
+        <p className="text-base sm:text-lg text-center lg:text-left">
+          Looking for something special? Tell us your idea 💕
+        </p>
+      </div>
+
+      {/* Right - Form */}
+      <form
+        onSubmit={handleSubmit}
+        className="w-full lg:w-1/2 space-y-4"
+      >
+        <input
+          name="firstName"
+          value={formData.firstName}
+          placeholder="First Name *"
+          required
+          onChange={handleChange}
+          className="border p-3 w-full rounded"
+        />
+
+        <input
+          name="lastName"
+          value={formData.lastName}
+          placeholder="Last Name *"
+          required
+          onChange={handleChange}
+          className="border p-3 w-full rounded"
+        />
+
+        <input
+          type="email"
+          name="email"
+          value={formData.email}
+          placeholder="Email *"
+          required
+          onChange={handleChange}
+          className="border p-3 w-full rounded"
+        />
+
+        <input
+          name="phone"
+          value={formData.phone}
+          placeholder="Phone *"
+          required
+          onChange={handleChange}
+          className="border p-3 w-full rounded"
+        />
+
+        <textarea
+          name="message"
+          value={formData.message}
+          rows="4"
+          placeholder="Describe your order..."
+          required
+          onChange={handleChange}
+          className="border p-3 w-full rounded"
+        />
+
+        {/* Contact Method */}
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+          <label className="flex gap-2 items-center cursor-pointer text-sm">
+            <input
+              type="radio"
+              name="contactMethod"
+              value="Whatsapp"
+              checked={formData.contactMethod === "Whatsapp"}
+              onChange={handleChange}
+            />
+            WhatsApp
+          </label>
+
+          <label className="flex gap-2 items-center cursor-pointer text-sm">
+            <input
+              type="radio"
+              name="contactMethod"
+              value="Email"
+              checked={formData.contactMethod === "Email"}
+              onChange={handleChange}
+            />
+            Email
+          </label>
         </div>
 
-        {/* Right - Form */}
-        <form onSubmit={handleSubmit} className="w-full lg:w-1/2 space-y-4">
-          <input
-            name="firstName"
-            value={formData.firstName}
-            placeholder="First Name *"
-            required
-            onChange={handleChange}
-            className="border p-2 w-full"
-          />
-          <input
-            name="lastName"
-            value={formData.lastName}
-            placeholder="Last Name *"
-            required
-            onChange={handleChange}
-            className="border p-2 w-full"
-          />
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            placeholder="Email *"
-            required
-            onChange={handleChange}
-            className="border p-2 w-full"
-          />
-          <input
-            name="phone"
-            value={formData.phone}
-            placeholder="Phone *"
-            required
-            onChange={handleChange}
-            className="border p-2 w-full"
-          />
-          <textarea
-            name="message"
-            value={formData.message}
-            rows="4"
-            placeholder="Describe your order..."
-            required
-            onChange={handleChange}
-            className="border p-2 w-full"
-          />
-
-          <div className="flex gap-6">
-            <label className="flex gap-2 items-center cursor-pointer">
-              <input
-                type="radio"
-                name="contactMethod"
-                value="Whatsapp"
-                checked={formData.contactMethod === "Whatsapp"}
-                onChange={handleChange}
-              />
-              WhatsApp
-            </label>
-            <label className="flex gap-2 items-center cursor-pointer">
-              <input
-                type="radio"
-                name="contactMethod"
-                value="Email"
-                checked={formData.contactMethod === "Email"}
-                onChange={handleChange}
-              />
-              Email
-            </label>
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className={`text-white py-3 w-full transition ${
-              loading ? "bg-gray-400 cursor-not-allowed" : "bg-black hover:bg-gray-800"
-            }`}
-          >
-            {loading ? "Submitting..." : "Submit Custom Order"}
-          </button>
-        </form>
-      </div>
-    </>
-  );
+        <button
+          type="submit"
+          disabled={loading}
+          className={`text-white py-3 w-full rounded transition ${
+            loading
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-black hover:bg-gray-800"
+          }`}
+        >
+          {loading ? "Submitting..." : "Submit Custom Order"}
+        </button>
+      </form>
+    </div>
+  </>
+);
 };
 
 export default Customorder;

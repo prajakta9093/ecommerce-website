@@ -83,98 +83,115 @@ const Orders = () => {
   }
 
   return (
-    <>
-      <Navbar />
-      <div className="max-w-6xl mx-auto p-6">
-        <h1 className="text-3xl font-bold mb-8">My Orders</h1>
+  <>
+    <Navbar />
 
-        {orders.length === 0 ? (
-          <p className="text-gray-500">No orders yet</p>
-        ) : (
-          <div className="space-y-6">
-            {orders.map((order) => (
-              <div key={order._id} className="bg-white p-6 rounded-lg shadow">
-                <div className="flex justify-between mb-4">
-                  <div>
-                    <p className="text-sm text-gray-600">
-                      Order ID: {order._id}
-                    </p>
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-6">
+        My Orders
+      </h1>
 
-                    {/* ✅ FIXED DATE */}
-                    <p className="text-sm text-gray-600">
-                      Date:{" "}
-                      {order.createdAt
-                        ? new Date(order.createdAt).toLocaleString("en-IN", {
-                            dateStyle: "medium",
-                            timeStyle: "short",
-                          })
-                        : "N/A"}
-                    </p>
-                  </div>
-
-                  <span
-                    className={`px-3 py-1 rounded-full text-sm ${getStatusColor(
-                      order.orderStatus
-                    )}`}
-                  >
-                    {order.orderStatus}
-                  </span>
-                </div>
-
-                {/* ITEMS */}
-                <div className="space-y-3">
-                  {order.items.map((item, i) => (
-                    <div key={i} className="flex justify-between">
-                      <p>
-                        {item.name} × {item.quantity}
-                      </p>
-                      <p>₹{item.price * item.quantity}</p>
-                    </div>
-                  ))}
-                </div>
-
-                <hr className="my-4" />
-
-                <div className="flex justify-between items-center">
-                  <div>
-                    <p>Payment: {order.paymentMethod}</p>
-                    <p className="font-bold text-lg">
-                      Total: ₹{order.totalAmount}
-                    </p>
-                  </div>
-
-                  {order.orderStatus === "Processing" && (
-                    <button
-                      onClick={() => handleCancelOrder(order._id)}
-                      className="bg-red-600 text-white px-4 py-2 rounded"
-                    >
-                      Cancel Order
-                    </button>
-                  )}
-                </div>
-
-                {/* ADDRESS */}
-                <div className="mt-4 bg-gray-50 p-4 rounded">
-                  <p className="font-semibold">Shipping Address</p>
-                  <p>
-                    {order.shippingAddress.firstName}{" "}
-                    {order.shippingAddress.lastName}
+      {orders.length === 0 ? (
+        <p className="text-gray-500">No orders yet</p>
+      ) : (
+        <div className="space-y-6">
+          {orders.map((order) => (
+            <div
+              key={order._id}
+              className="bg-white p-4 sm:p-6 rounded-lg shadow"
+            >
+              {/* HEADER */}
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-4">
+                <div>
+                  <p className="text-xs sm:text-sm text-gray-600 break-all">
+                    Order ID: {order._id}
                   </p>
-                  <p>{order.shippingAddress.address}</p>
-                  <p>
-                    {order.shippingAddress.city},{" "}
-                    {order.shippingAddress.state} -{" "}
-                    {order.shippingAddress.pincode}
+                  <p className="text-xs sm:text-sm text-gray-600">
+                    Date:{" "}
+                    {order.createdAt
+                      ? new Date(order.createdAt).toLocaleString("en-IN", {
+                          dateStyle: "medium",
+                          timeStyle: "short",
+                        })
+                      : "N/A"}
                   </p>
-                  <p>Phone: {order.shippingAddress.phone}</p>
                 </div>
+
+                <span
+                  className={`self-start sm:self-auto px-3 py-1 rounded-full text-xs sm:text-sm ${getStatusColor(
+                    order.orderStatus
+                  )}`}
+                >
+                  {order.orderStatus}
+                </span>
               </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </>
-  );
+
+              {/* ITEMS */}
+              <div className="space-y-2 text-sm">
+                {order.items.map((item, i) => (
+                  <div
+                    key={i}
+                    className="flex justify-between gap-2"
+                  >
+                    <p className="flex-1">
+                      {item.name} × {item.quantity}
+                    </p>
+                    <p className="font-medium">
+                      ₹{item.price * item.quantity}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              <hr className="my-4" />
+
+              {/* TOTAL + ACTION */}
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+                <div>
+                  <p className="text-sm">
+                    Payment: {order.paymentMethod}
+                  </p>
+                  <p className="font-bold text-lg text-pink-600">
+                    Total: ₹{order.totalAmount}
+                  </p>
+                </div>
+
+                {order.orderStatus === "Processing" && (
+                  <button
+                    onClick={() => handleCancelOrder(order._id)}
+                    className="bg-red-600 text-white px-4 py-2 rounded 
+                               text-sm w-full sm:w-auto"
+                  >
+                    Cancel Order
+                  </button>
+                )}
+              </div>
+
+              {/* ADDRESS */}
+              <div className="mt-4 bg-gray-50 p-3 sm:p-4 rounded text-sm">
+                <p className="font-semibold mb-1">
+                  Shipping Address
+                </p>
+                <p>
+                  {order.shippingAddress.firstName}{" "}
+                  {order.shippingAddress.lastName}
+                </p>
+                <p>{order.shippingAddress.address}</p>
+                <p>
+                  {order.shippingAddress.city},{" "}
+                  {order.shippingAddress.state} –{" "}
+                  {order.shippingAddress.pincode}
+                </p>
+                <p>Phone: {order.shippingAddress.phone}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  </>
+);
+
 };
 
 export default Orders;

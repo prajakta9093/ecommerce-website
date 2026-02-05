@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const backendUrl = import.meta.env.VITE_BACKENDURL; // ✅ Fixed: hardcoded like admin Orders page
+const backendUrl = import.meta.env.VITE_BACKENDURL;
 
 const CustomOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -55,35 +55,34 @@ const CustomOrders = () => {
     }
   };
 
-  // ── UI States ──
-  if (loading) return <p className="p-6">Loading custom orders...</p>;
+  if (loading) return <p className="p-4 sm:p-6">Loading custom orders...</p>;
 
   if (error)
     return (
-      <div className="p-6">
+      <div className="p-4 sm:p-6">
         <p className="text-red-600 mb-4">{error}</p>
         <button
           onClick={fetchOrders}
-          className="bg-gray-600 text-white px-4 py-2 rounded"
+          className="bg-gray-600 text-white px-4 py-2 rounded w-full sm:w-auto"
         >
           Retry
         </button>
       </div>
     );
 
-  // ── Main ──
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 px-3 sm:px-6 py-6">
       <div className="max-w-7xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold">Custom Orders</h1>
-          <span className="text-sm text-gray-500 bg-white border px-3 py-1 rounded-full shadow-sm">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+          <h1 className="text-2xl sm:text-3xl font-bold">Custom Orders</h1>
+          <span className="text-xs sm:text-sm text-gray-500 bg-white border px-3 py-1 rounded-full shadow-sm w-fit">
             {orders.length} {orders.length === 1 ? "Order" : "Orders"}
           </span>
         </div>
 
         {orders.length === 0 ? (
-          <div className="bg-white p-6 rounded shadow text-center text-gray-500">
+          <div className="bg-white p-4 sm:p-6 rounded shadow text-center text-gray-500">
             No custom orders yet
           </div>
         ) : (
@@ -91,29 +90,29 @@ const CustomOrders = () => {
             {orders.map((order) => (
               <div
                 key={order._id}
-                className="bg-white border p-6 rounded-lg shadow-sm"
+                className="bg-white border p-4 sm:p-6 rounded-lg shadow-sm"
               >
-                {/* Top row - Name + Contact Badge + Date */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                {/* Info Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                   <div>
-                    <p className="text-sm text-gray-500">Customer</p>
-                    <p className="font-medium">
+                    <p className="text-xs text-gray-500">Customer</p>
+                    <p className="font-medium text-sm">
                       {order.firstName} {order.lastName}
                     </p>
                   </div>
 
                   <div>
-                    <p className="text-sm text-gray-500">Email</p>
-                    <p className="text-sm">{order.email}</p>
+                    <p className="text-xs text-gray-500">Email</p>
+                    <p className="text-sm break-all">{order.email}</p>
                   </div>
 
                   <div>
-                    <p className="text-sm text-gray-500">Phone</p>
+                    <p className="text-xs text-gray-500">Phone</p>
                     <p className="text-sm">{order.phone}</p>
                   </div>
 
                   <div>
-                    <p className="text-sm text-gray-500">Date</p>
+                    <p className="text-xs text-gray-500">Date</p>
                     <p className="text-sm">
                       {order.createdAt
                         ? new Date(order.createdAt).toLocaleDateString()
@@ -122,10 +121,10 @@ const CustomOrders = () => {
                   </div>
                 </div>
 
-                {/* Contact Method Badge */}
-                <div className="flex flex-wrap gap-4 mb-4">
+                {/* Contact Method */}
+                <div className="flex flex-wrap gap-3 mb-4">
                   <span
-                    className={`px-3 py-1 rounded-full text-sm ${
+                    className={`px-3 py-1 rounded-full text-xs sm:text-sm ${
                       order.contactMethod === "Whatsapp"
                         ? "bg-green-100 text-green-700"
                         : "bg-blue-100 text-blue-700"
@@ -138,15 +137,15 @@ const CustomOrders = () => {
 
                 {/* Message */}
                 <div className="bg-gray-50 p-3 rounded mb-4">
-                  <p className="text-sm text-gray-500 mb-1">Order Details</p>
-                  <p className="text-sm">{order.message}</p>
+                  <p className="text-xs text-gray-500 mb-1">Order Details</p>
+                  <p className="text-sm break-words">{order.message}</p>
                 </div>
 
-                {/* Delete Button */}
+                {/* Delete */}
                 <div className="flex justify-end">
                   <button
                     onClick={() => deleteOrder(order._id)}
-                    className="bg-red-600 hover:bg-red-700 text-white text-sm px-4 py-2 rounded transition"
+                    className="bg-red-600 hover:bg-red-700 text-white text-sm px-4 py-2 rounded transition w-full sm:w-auto"
                   >
                     Delete Order
                   </button>

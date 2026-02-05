@@ -221,26 +221,26 @@ const Placeorder = () => {
   <>
     <Navbar />
 
-    <div className="min-h-screen bg-gray-100 py-10 px-4">
+    <div className="min-h-screen bg-gray-100 py-6 px-3 sm:px-4">
       <div className="max-w-5xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8 text-gray-800">
+        <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-gray-800">
           Checkout
         </h1>
 
         <form
           onSubmit={handleSubmit}
-          className="grid grid-cols-1 md:grid-cols-2 gap-8"
+          className="grid grid-cols-1 md:grid-cols-2 gap-6"
         >
           {/* SHIPPING DETAILS */}
-          <div className="bg-white p-6 rounded-xl shadow space-y-5">
-            <h2 className="text-xl font-semibold text-gray-700">
+          <div className="bg-white p-4 sm:p-6 rounded-xl shadow space-y-4">
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-700">
               Shipping Details
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {Object.keys(formData).map((field) => (
                 <div key={field} className="flex flex-col">
-                  <label className="text-sm text-gray-600 capitalize mb-1">
+                  <label className="text-xs sm:text-sm text-gray-600 capitalize mb-1">
                     {field}
                   </label>
                   <input
@@ -249,43 +249,43 @@ const Placeorder = () => {
                     value={formData[field]}
                     onChange={handleChange}
                     required
-                    className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="p-3 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                   />
                 </div>
               ))}
             </div>
 
             {/* PAYMENT METHOD */}
-            <div className="space-y-3">
-              <h3 className="font-semibold text-gray-700">
+            <div className="space-y-2">
+              <h3 className="font-semibold text-gray-700 text-sm">
                 Payment Method
               </h3>
 
-              <label className="flex items-center gap-2 cursor-pointer">
+              <label className="flex items-center gap-2 text-sm">
                 <input
                   type="radio"
                   value="COD"
                   checked={paymentMethod === "COD"}
                   onChange={(e) => setPaymentMethod(e.target.value)}
                 />
-                <span>Cash on Delivery</span>
+                Cash on Delivery
               </label>
 
-              <label className="flex items-center gap-2 cursor-pointer">
+              <label className="flex items-center gap-2 text-sm">
                 <input
                   type="radio"
                   value="Razorpay"
                   checked={paymentMethod === "Razorpay"}
                   onChange={(e) => setPaymentMethod(e.target.value)}
                 />
-                <span>Pay Online (Razorpay)</span>
+                Pay Online (Razorpay)
               </label>
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className={`w-full py-3 rounded-lg text-white font-semibold transition
+              className={`w-full py-3 rounded-lg text-white text-sm font-semibold transition
                 ${
                   loading
                     ? "bg-gray-400 cursor-not-allowed"
@@ -301,71 +301,69 @@ const Placeorder = () => {
           </div>
 
           {/* ORDER SUMMARY */}
-          {/* ORDER SUMMARY */}
-<div className="bg-white p-6 rounded-xl shadow h-fit space-y-4">
-  <h2 className="text-xl font-semibold text-gray-700">
-    Order Summary
-  </h2>
+          <div className="bg-white p-4 sm:p-6 rounded-xl shadow h-fit space-y-4">
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-700">
+              Order Summary
+            </h2>
 
-  {/* PRODUCT LIST */}
-  <div className="space-y-3 max-h-64 overflow-y-auto">
-    {Object.keys(cartitems).map((itemId) => {
-      const product = products.find(
-        (p) => String(p._id) === String(itemId)
-      );
+            <div className="space-y-3 max-h-56 overflow-y-auto text-sm">
+              {Object.keys(cartitems).map((itemId) => {
+                const product = products.find(
+                  (p) => String(p._id) === String(itemId)
+                );
 
-      if (!product || cartitems[itemId].quantity === 0) return null;
+                if (!product || cartitems[itemId].quantity === 0)
+                  return null;
 
-      return (
-        <div
-          key={itemId}
-          className="flex justify-between items-start border-b pb-2 text-sm"
-        >
-          <div>
-            <p className="font-medium text-gray-800">
-              {product.name}
-            </p>
-            <p className="text-gray-500">
-              Qty: {cartitems[itemId].quantity}
-            </p>
+                return (
+                  <div
+                    key={itemId}
+                    className="flex justify-between gap-2 border-b pb-2"
+                  >
+                    <div>
+                      <p className="font-medium text-gray-800">
+                        {product.name}
+                      </p>
+                      <p className="text-gray-500">
+                        Qty: {cartitems[itemId].quantity}
+                      </p>
+                    </div>
+
+                    <p className="font-semibold text-green-600">
+                      ₹{product.price * cartitems[itemId].quantity}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+
+            <hr />
+
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between text-gray-600">
+                <span>Subtotal</span>
+                <span>₹{getCartAmount()}</span>
+              </div>
+
+              <div className="flex justify-between text-gray-600">
+                <span>Delivery</span>
+                <span>₹{delivery_fee}</span>
+              </div>
+            </div>
+
+            <hr />
+
+            <div className="flex justify-between text-base sm:text-lg font-bold text-gray-800">
+              <span>Total</span>
+              <span>₹{getCartAmount() + delivery_fee}</span>
+            </div>
           </div>
-
-          <p className="font-semibold text-green-600">
-            ₹{product.price * cartitems[itemId].quantity}
-          </p>
-        </div>
-      );
-    })}
-  </div>
-
-  <hr />
-
-  {/* TOTALS */}
-  <div className="space-y-2 text-sm">
-    <div className="flex justify-between text-gray-600">
-      <span>Subtotal</span>
-      <span>₹{getCartAmount()}</span>
-    </div>
-
-    <div className="flex justify-between text-gray-600">
-      <span>Delivery</span>
-      <span>₹{delivery_fee}</span>
-    </div>
-  </div>
-
-  <hr />
-
-  <div className="flex justify-between text-lg font-bold text-gray-800">
-    <span>Total</span>
-    <span>₹{getCartAmount() + delivery_fee}</span>
-  </div>
-</div>
-
         </form>
       </div>
     </div>
   </>
 );
+
 };
 
 export default Placeorder;

@@ -1,7 +1,24 @@
 @import "tailwindcss";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-a.active hr{
-    display: block;
+
+a.active hr {
+  display: block;
 }
+
+@layer base {
+  html, body {
+    @apply w-full overflow-x-hidden;
+  }
+
+  * {
+    @apply box-border max-w-full;
+  }
+
+  img, video {
+    @apply max-w-full h-auto;
+  }
+}
+

@@ -70,67 +70,85 @@ const Login = () => {
     }
   };
 
-  return (
-    <>
-      <Navbar />
-      <div className="flex justify-center mt-20">
-        <form
-          onSubmit={handleSubmit}
-          className="w-[90%] sm:max-w-[400px] bg-white p-6 shadow-lg rounded-xl space-y-4"
+ return (
+  <>
+    <Navbar />
+
+    {/* Page Wrapper */}
+    <div className="min-h-screen flex items-start sm:items-center justify-center 
+                    px-4 sm:px-6 pt-10 sm:pt-20">
+
+      <form
+        onSubmit={handleSubmit}
+        className="w-full max-w-[380px] bg-white 
+                   p-5 sm:p-6 
+                   shadow-lg rounded-xl space-y-4"
+      >
+        <h2 className="text-2xl font-bold text-center">
+          {currentState}
+        </h2>
+
+        {currentState === "Signup" && (
+          <input
+            type="text"
+            placeholder="Full Name"
+            className="w-full p-3 border rounded-lg 
+                       focus:ring-2 focus:ring-pink-500 focus:outline-none"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+        )}
+
+        <input
+          type="email"
+          placeholder="Email"
+          className="w-full p-3 border rounded-lg 
+                     focus:ring-2 focus:ring-pink-500 focus:outline-none"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+
+        <input
+          type="password"
+          placeholder="Password"
+          className="w-full p-3 border rounded-lg 
+                     focus:ring-2 focus:ring-pink-500 focus:outline-none"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-pink-600 text-white py-3 
+                     rounded-lg font-medium 
+                     hover:bg-pink-700 
+                     disabled:bg-gray-400 transition"
         >
-          <h2 className="text-2xl font-bold text-center">{currentState}</h2>
+          {loading ? "Please wait..." : currentState}
+        </button>
 
-          {currentState === "Signup" && (
-            <input
-              type="text"
-              placeholder="Full Name"
-              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-pink-500 focus:outline-none"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
-          )}
+        <p
+          className="text-sm text-blue-500 cursor-pointer 
+                     text-center hover:underline"
+          onClick={() =>
+            setCurrentState(
+              currentState === "Login" ? "Signup" : "Login"
+            )
+          }
+        >
+          {currentState === "Login"
+            ? "Create new account"
+            : "Already have an account?"}
+        </p>
+      </form>
+    </div>
+  </>
+);
 
-          <input
-            type="email"
-            placeholder="Email"
-            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-pink-500 focus:outline-none"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-pink-500 focus:outline-none"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-pink-600 text-white py-3 rounded-lg font-medium hover:bg-pink-700 disabled:bg-gray-400 transition"
-          >
-            {loading ? "Please wait..." : currentState}
-          </button>
-
-          <p
-            className="text-sm text-blue-500 cursor-pointer text-center hover:underline"
-            onClick={() =>
-              setCurrentState(currentState === "Login" ? "Signup" : "Login")
-            }
-          >
-            {currentState === "Login"
-              ? "Create new account"
-              : "Already have an account?"}
-          </p>
-        </form>
-      </div>
-    </>
-  );
 };
 
 export default Login;

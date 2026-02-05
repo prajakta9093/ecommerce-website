@@ -22,7 +22,7 @@ const Profile = () => {
 
   const fetchUserProfile = async () => {
     const token = localStorage.getItem("token");
-    
+
     if (!token) {
       navigate("/login");
       return;
@@ -30,9 +30,7 @@ const Profile = () => {
 
     try {
       const res = await axios.get(`${backendUrl}/api/user/profile`, {
-        headers: {
-          token: token,
-        },
+        headers: { token },
       });
 
       if (res.data.success) {
@@ -43,17 +41,12 @@ const Profile = () => {
         setError(null);
       } else {
         setError(res.data.message);
-        alert(res.data.message);
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
+        localStorage.clear();
         navigate("/login");
       }
     } catch (error) {
-      console.error("Error fetching profile:", error);
       setError("Failed to load profile");
-      alert("Failed to load profile. Please login again.");
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
+      localStorage.clear();
       navigate("/login");
     } finally {
       setFetchingProfile(false);
@@ -70,11 +63,7 @@ const Profile = () => {
       const res = await axios.put(
         `${backendUrl}/api/user/profile`,
         { firstName, lastName, phone },
-        {
-          headers: {
-            token: token,
-          },
-        }
+        { headers: { token } }
       );
 
       if (res.data.success) {
@@ -84,7 +73,6 @@ const Profile = () => {
         alert(res.data.message || "Update failed");
       }
     } catch (error) {
-      console.error("Error updating profile:", error);
       alert("Failed to update profile");
     } finally {
       setLoading(false);
@@ -95,9 +83,7 @@ const Profile = () => {
     return (
       <>
         <Navbar />
-        <div className="text-center mt-20">
-          <div className="text-xl mb-4">Loading profile...</div>
-        </div>
+        <div className="text-center mt-20 text-lg">Loading profile...</div>
       </>
     );
   }
@@ -106,13 +92,13 @@ const Profile = () => {
     return (
       <>
         <Navbar />
-        <div className="text-center mt-20">
-          <p className="text-xl text-red-600 mb-4">
+        <div className="text-center mt-20 px-4">
+          <p className="text-lg text-red-600 mb-4">
             {error || "Failed to load profile"}
           </p>
           <button
             onClick={() => navigate("/login")}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            className="px-6 py-2 bg-blue-600 text-white rounded-lg"
           >
             Go to Login
           </button>
@@ -124,20 +110,30 @@ const Profile = () => {
   return (
     <>
       <Navbar />
-      <div className="max-w-2xl mx-auto mt-10 p-6">
-        <div className="bg-white shadow-lg rounded-lg p-8">
-          <h2 className="text-3xl font-bold mb-6 text-gray-800">My Profile</h2>
 
-          <div className="mb-8 bg-gradient-to-r from-pink-50 to-purple-50 p-6 rounded-lg border border-pink-200">
-            <div className="flex items-center gap-4 mb-4">
-              <div className="w-16 h-16 bg-pink-600 text-white rounded-full flex items-center justify-center text-2xl font-bold">
+      <div className="max-w-2xl mx-auto mt-6 sm:mt-10 px-4 sm:px-6">
+        <div className="bg-white shadow-lg rounded-lg p-5 sm:p-8">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-gray-800">
+            My Profile
+          </h2>
+
+          {/* USER INFO */}
+          <div className="mb-6 bg-gradient-to-r from-pink-50 to-purple-50 p-4 sm:p-6 rounded-lg border border-pink-200">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
+              <div className="w-14 h-14 sm:w-16 sm:h-16 bg-pink-600 text-white rounded-full flex items-center justify-center text-xl sm:text-2xl font-bold">
                 {user.name?.charAt(0).toUpperCase() || "U"}
               </div>
-              <div>
-                <p className="text-xl font-semibold text-gray-800">{user.name || "N/A"}</p>
-                <p className="text-gray-600">{user.email || "N/A"}</p>
+
+              <div className="text-center sm:text-left">
+                <p className="text-lg sm:text-xl font-semibold text-gray-800">
+                  {user.name || "N/A"}
+                </p>
+                <p className="text-sm sm:text-base text-gray-600">
+                  {user.email || "N/A"}
+                </p>
               </div>
             </div>
+
             <p className="text-xs text-gray-500 mt-3">
               <span className="font-semibold">Member since:</span>{" "}
               {new Date(user.createdAt).toLocaleDateString("en-IN", {
@@ -148,43 +144,41 @@ const Profile = () => {
             </p>
           </div>
 
-          <form onSubmit={handleUpdate} className="space-y-5">
+          {/* FORM */}
+          <form onSubmit={handleUpdate} className="space-y-4">
             <div>
-              <label className="block mb-2 font-medium text-gray-700">
+              <label className="block mb-1 font-medium text-gray-700">
                 First Name
               </label>
               <input
                 type="text"
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:outline-none"
+                className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-pink-500"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
-                placeholder="Enter first name"
               />
             </div>
 
             <div>
-              <label className="block mb-2 font-medium text-gray-700">
+              <label className="block mb-1 font-medium text-gray-700">
                 Last Name
               </label>
               <input
                 type="text"
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:outline-none"
+                className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-pink-500"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
-                placeholder="Enter last name"
               />
             </div>
 
             <div>
-              <label className="block mb-2 font-medium text-gray-700">
+              <label className="block mb-1 font-medium text-gray-700">
                 Phone Number
               </label>
               <input
                 type="tel"
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:outline-none"
+                className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-pink-500"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                placeholder="Enter phone number"
               />
             </div>
 
@@ -197,12 +191,13 @@ const Profile = () => {
             </button>
           </form>
 
-          <div className="mt-6 p-4 bg-blue-50 rounded-lg text-sm text-gray-600">
+          {/* TIPS */}
+          <div className="mt-6 p-4 bg-blue-50 rounded-lg text-xs sm:text-sm text-gray-600">
             <p className="font-semibold mb-2">💡 Profile Tips:</p>
-            <ul className="list-disc list-inside space-y-1 text-xs">
+            <ul className="list-disc list-inside space-y-1">
               <li>Keep your profile information up to date</li>
               <li>Add your phone number for order updates</li>
-              <li>Use the logout option in the profile menu (top right)</li>
+              <li>Use logout option from profile menu</li>
             </ul>
           </div>
         </div>

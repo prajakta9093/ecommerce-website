@@ -4,16 +4,17 @@ import { assets } from "../assets/assets";
 
 const Sidebar = () => {
   return (
-    <div className="w-64 bg-white shadow-md min-h-screen p-4 space-y-3">
+    <aside className="w-64 bg-white shadow-md min-h-screen p-4 space-y-3">
+      
       <NavLink
         to="/add"
         className={({ isActive }) =>
-          `flex items-center gap-3 px-3 py-2 rounded-md border
-           ${isActive ? "bg-gray-200" : "hover:bg-gray-100"}`
+          `flex items-center gap-3 px-4 py-2 rounded-lg border text-sm font-medium transition
+          ${isActive ? "bg-gray-200" : "hover:bg-gray-100"}`
         }
       >
         {assets.add_icon && (
-          <img src={assets.add_icon} className="w-6" />
+          <img src={assets.add_icon} alt="Add item" className="w-5 h-5" />
         )}
         <span>Add Items</span>
       </NavLink>
@@ -21,12 +22,12 @@ const Sidebar = () => {
       <NavLink
         to="/list"
         className={({ isActive }) =>
-          `flex items-center gap-3 px-3 py-2 rounded-md border
-           ${isActive ? "bg-gray-200" : "hover:bg-gray-100"}`
+          `flex items-center gap-3 px-4 py-2 rounded-lg border text-sm font-medium transition
+          ${isActive ? "bg-gray-200" : "hover:bg-gray-100"}`
         }
       >
         {assets.order_icon && (
-          <img src={assets.order_icon} className="w-6" />
+          <img src={assets.order_icon} alt="List items" className="w-5 h-5" />
         )}
         <span>List Items</span>
       </NavLink>
@@ -34,29 +35,30 @@ const Sidebar = () => {
       <NavLink
         to="/orders"
         className={({ isActive }) =>
-          `flex items-center gap-3 px-3 py-2 rounded-md border
-           ${isActive ? "bg-gray-200" : "hover:bg-gray-100"}`
+          `flex items-center gap-3 px-4 py-2 rounded-lg border text-sm font-medium transition
+          ${isActive ? "bg-gray-200" : "hover:bg-gray-100"}`
         }
       >
         {assets.order_icon && (
-          <img src={assets.order_icon} className="w-6" />
+          <img src={assets.order_icon} alt="Orders" className="w-5 h-5" />
         )}
         <span>Orders</span>
       </NavLink>
-      <NavLink
-  to="/custom-orders"
-  className={({ isActive }) =>
-    `flex items-center gap-3 px-3 py-2 rounded-md border
-     ${isActive ? "bg-gray-200" : "hover:bg-gray-100"}`
-  }
->
-  {assets.order_icon && (
-    <img src={assets.order_icon} className="w-6" />
-  )}
-  <span>Custom Orders</span>
-</NavLink>
 
-    </div>
+      <NavLink
+        to="/custom-orders"
+        className={({ isActive }) =>
+          `flex items-center gap-3 px-4 py-2 rounded-lg border text-sm font-medium transition
+          ${isActive ? "bg-gray-200" : "hover:bg-gray-100"}`
+        }
+      >
+        {assets.order_icon && (
+          <img src={assets.order_icon} alt="Custom orders" className="w-5 h-5" />
+        )}
+        <span>Custom Orders</span>
+      </NavLink>
+
+    </aside>
   );
 };
 

@@ -13,66 +13,38 @@ const Login = ({ setToken }) => {
     setLoading(true);
     setError("");
 
-    console.log("🔄 Attempting login...", { email, backendUrl });
-
     try {
-      console.log("📤 Sending request to:", `${backendUrl}/api/user/admin-login`);
-      
       const res = await fetch(`${backendUrl}/api/user/admin-login`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
-      console.log("📡 Response received:", {
-        status: res.status,
-        statusText: res.statusText,
-        ok: res.ok,
-        headers: Object.fromEntries(res.headers.entries())
-      });
-
-      if (!res.ok) {
-        console.error("❌ Response not OK:", res.status);
-      }
-
-      const contentType = res.headers.get("content-type");
-      if (!contentType || !contentType.includes("application/json")) {
-        const text = await res.text();
-        console.error("❌ Non-JSON response:", text);
-        throw new Error("Server returned non-JSON response");
-      }
-
       const data = await res.json();
-      console.log("📦 Response data:", data);
 
       if (data.success && data.token) {
         localStorage.setItem("adminToken", data.token);
-        console.log("✅ Login successful, token stored:", data.token.substring(0, 20) + "...");
-        setToken(data.token); // Update parent state
+        setToken(data.token);
       } else {
-        console.log("❌ Login failed:", data.message);
-        setError(data.message || "Login failed. Please check your credentials.");
+        setError(data.message || "Login failed");
       }
-    } catch (error) {
-      console.error("❌ Login error:", error);
-      console.error("Error name:", error.name);
-      console.error("Error message:", error.message);
-      console.error("Error stack:", error.stack);
-      setError(`Connection error: ${error.message}. Please ensure backend is running on http://localhost:9000`);
+    } catch (err) {
+      setError("Server error. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="bg-white p-8 rounded-2xl shadow-xl w-96">
-        <div className="text-center mb-8">
-          <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+    <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
+      
+      <div className="bg-white w-full max-w-md p-6 sm:p-8 rounded-2xl shadow-xl">
+        
+        {/* Header */}
+        <div className="text-center mb-6">
+          <div className="bg-blue-100 w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-3">
             <svg
-              className="w-8 h-8 text-blue-600"
+              className="w-7 h-7 sm:w-8 sm:h-8 text-blue-600"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -85,61 +57,67 @@ const Login = ({ setToken }) => {
               />
             </svg>
           </div>
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Admin Panel</h1>
-          <p className="text-gray-600">Sign in to manage your store</p>
+
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">
+            Admin Panel
+          </h1>
+          <p className="text-sm sm:text-base text-gray-600 mt-1">
+            Sign in to manage your store
+          </p>
         </div>
 
+        {/* Error */}
         {error && (
-          <div className="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded mb-6">
-            <p className="font-medium">Error</p>
-            <p className="text-sm">{error}</p>
+          <div className="bg-red-50 border-l-4 border-red-500 text-red-700 p-3 rounded mb-4 text-sm">
+            {error}
           </div>
         )}
 
+        {/* Form */}
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Email Address
             </label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
               placeholder="admin@example.com"
-              required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Password
             </label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleLogin(e)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onKeyDown={(e) => e.key === "Enter" && handleLogin(e)}
+              className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
               placeholder="••••••••"
-              required
             />
           </div>
 
           <button
             onClick={handleLogin}
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition font-medium disabled:bg-gray-400 disabled:cursor-not-allowed"
+            className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition disabled:bg-gray-400"
           >
             {loading ? "Logging in..." : "Sign In"}
           </button>
         </div>
 
-        <div className="mt-6 p-4 bg-gray-50 rounded-lg border">
-          <p className="text-xs font-semibold text-gray-700 mb-2">Demo Credentials</p>
-          <p className="text-xs text-gray-600">Email: vid@gmail.com</p>
-          <p className="text-xs text-gray-600">Password: 12345678</p>
+        {/* Demo credentials */}
+        <div className="mt-6 p-3 bg-gray-50 rounded-lg border text-xs sm:text-sm">
+          <p className="font-semibold text-gray-700 mb-1">Demo Credentials</p>
+          <p>Email: vid@gmail.com</p>
+          <p>Password: 12345678</p>
         </div>
+
       </div>
     </div>
   );

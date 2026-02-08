@@ -20,135 +20,154 @@ const Login = () => {
 
     try {
       if (currentState === "Signup") {
-        console.log("📤 Sending signup request:", { name, email, password });
-        
         const res = await axios.post(`${backendUrl}/api/user/register`, {
           name,
           email,
           password,
         });
 
-        console.log("📥 Signup response:", res.data);
-
         if (res.data.success) {
           localStorage.setItem("token", res.data.token);
           localStorage.setItem("user", JSON.stringify(res.data.user));
-          console.log("✅ Token saved:", res.data.token);
-          console.log("✅ User saved:", res.data.user);
-          alert("Signup successful!");
           navigate("/profile");
         } else {
           alert(res.data.message || "Signup failed");
         }
       } else {
-        console.log("📤 Sending login request:", { email, password });
-        
         const res = await axios.post(`${backendUrl}/api/user/login`, {
           email,
           password,
         });
 
-        console.log("📥 Login response:", res.data);
-
         if (res.data.success) {
           localStorage.setItem("token", res.data.token);
           localStorage.setItem("user", JSON.stringify(res.data.user));
-          console.log("✅ Token saved:", res.data.token);
-          console.log("✅ User saved:", res.data.user);
-          alert("Login successful!");
           navigate("/profile");
         } else {
           alert(res.data.message || "Login failed");
         }
       }
     } catch (error) {
-      console.error("❌ Error:", error);
-      console.error("❌ Error response:", error.response?.data);
       alert("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
- return (
-  <>
-    <Navbar />
+  return (
+    <div className="min-h-screen bg-[#faf8f4]">
+      <Navbar />
 
-    {/* Page Wrapper */}
-    <div className="min-h-screen flex items-start sm:items-center justify-center 
-                    px-4 sm:px-6 pt-10 sm:pt-20">
+      <div className="pt-24 pb-16 px-4 flex items-center justify-center min-h-screen">
+        <div className="w-full max-w-md">
 
-      <form
-        onSubmit={handleSubmit}
-        className="w-full max-w-[380px] bg-white 
-                   p-5 sm:p-6 
-                   shadow-lg rounded-xl space-y-4"
-      >
-        <h2 className="text-2xl font-bold text-center">
-          {currentState}
-        </h2>
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="inline-block w-20 h-20 bg-[#8b6f4e] rounded-full flex items-center justify-center mb-4 shadow-lg">
+              <svg className="w-10 h-10 text-white" fill="none" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
+                <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </div>
 
-        {currentState === "Signup" && (
-          <input
-            type="text"
-            placeholder="Full Name"
-            className="w-full p-3 border rounded-lg 
-                       focus:ring-2 focus:ring-pink-500 focus:outline-none"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-        )}
+            <h1 className="text-4xl font-bold text-[#3f3a34] mb-2">
+              {currentState === "Login" ? "Welcome Back" : "Create Account"}
+            </h1>
+            <p className="text-[#7a6f63]">
+              {currentState === "Login"
+                ? "Sign in to continue"
+                : "Join our handmade journey"}
+            </p>
+          </div>
 
-        <input
-          type="email"
-          placeholder="Email"
-          className="w-full p-3 border rounded-lg 
-                     focus:ring-2 focus:ring-pink-500 focus:outline-none"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+          {/* Form */}
+          <div className="bg-white rounded-3xl shadow-xl p-8 md:p-10 border border-[#e6e0d6]">
+            <form onSubmit={handleSubmit} className="space-y-5">
 
-        <input
-          type="password"
-          placeholder="Password"
-          className="w-full p-3 border rounded-lg 
-                     focus:ring-2 focus:ring-pink-500 focus:outline-none"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+              {currentState === "Signup" && (
+                <div>
+                  <label className="block text-sm font-semibold text-[#3f3a34] mb-2">
+                    Full Name
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Your name"
+                    className="w-full px-4 py-4 border-2 border-[#e6e0d6] rounded-xl focus:outline-none focus:border-[#8b6f4e] focus:ring-4 focus:ring-[#d8cbb8]"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                  />
+                </div>
+              )}
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-pink-600 text-white py-3 
-                     rounded-lg font-medium 
-                     hover:bg-pink-700 
-                     disabled:bg-gray-400 transition"
-        >
-          {loading ? "Please wait..." : currentState}
-        </button>
+              <div>
+                <label className="block text-sm font-semibold text-[#3f3a34] mb-2">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  placeholder="you@example.com"
+                  className="w-full px-4 py-4 border-2 border-[#e6e0d6] rounded-xl focus:outline-none focus:border-[#8b6f4e] focus:ring-4 focus:ring-[#d8cbb8]"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
 
-        <p
-          className="text-sm text-blue-500 cursor-pointer 
-                     text-center hover:underline"
-          onClick={() =>
-            setCurrentState(
-              currentState === "Login" ? "Signup" : "Login"
-            )
-          }
-        >
-          {currentState === "Login"
-            ? "Create new account"
-            : "Already have an account?"}
-        </p>
-      </form>
+              <div>
+                <label className="block text-sm font-semibold text-[#3f3a34] mb-2">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  placeholder="••••••••"
+                  className="w-full px-4 py-4 border-2 border-[#e6e0d6] rounded-xl focus:outline-none focus:border-[#8b6f4e] focus:ring-4 focus:ring-[#d8cbb8]"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+
+              {/* Button */}
+              <button
+                type="submit"
+                disabled={loading}
+                className={`w-full bg-[#8b6f4e] text-white py-4 rounded-xl font-bold text-lg shadow-md transition-all duration-300 ${
+                  loading
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:bg-[#755c3f] hover:shadow-xl hover:scale-105"
+                }`}
+              >
+                {loading ? "Please wait..." : currentState}
+              </button>
+
+              {/* Toggle */}
+              <div className="text-center pt-4">
+                <p className="text-[#6b6258]">
+                  {currentState === "Login"
+                    ? "Don't have an account? "
+                    : "Already have an account? "}
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setCurrentState(currentState === "Login" ? "Signup" : "Login")
+                    }
+                    className="text-[#8b6f4e] font-semibold hover:underline"
+                  >
+                    {currentState === "Login" ? "Sign up" : "Log in"}
+                  </button>
+                </p>
+              </div>
+
+            </form>
+          </div>
+
+          <p className="mt-8 text-center text-sm text-[#7a6f63]">
+            By continuing, you agree to our Terms & Privacy Policy
+          </p>
+        </div>
+      </div>
     </div>
-  </>
-);
-
+  );
 };
 
 export default Login;

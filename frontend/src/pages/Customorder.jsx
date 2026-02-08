@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
-const backendUrl = import.meta.env.VITE_BACKENDURL; // ✅ Fixed: hardcoded like Orders page
+const backendUrl = import.meta.env.VITE_BACKENDURL;
 
 const Customorder = () => {
   const [formData, setFormData] = useState({
@@ -14,31 +15,56 @@ const Customorder = () => {
     contactMethod: "Whatsapp",
   });
 
+  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setErrors({ ...errors, [e.target.name]: "" });
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!/^[A-Za-z]+$/.test(formData.firstName))
+      newErrors.firstName = "Only letters allowed";
+
+    if (!/^[A-Za-z]+$/.test(formData.lastName))
+      newErrors.lastName = "Only letters allowed";
+
+    if (!/^\S+@\S+\.\S+$/.test(formData.email))
+      newErrors.email = "Invalid email address";
+
+    if (!/^[0-9]{10}$/.test(formData.phone))
+      newErrors.phone = "Phone must be 10 digits";
+
+    if (formData.message.length < 10)
+      newErrors.message = "Minimum 10 characters required";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) return;
+
     setLoading(true);
 
-    // ✅ Save the current formData before resetting
-    const currentData = { ...formData };
-
     try {
-      const res = await axios.post(`${backendUrl}/api/customorders`, formData, {
-        headers: { "Content-Type": "application/json" },
-      });
+      const res = await axios.post(
+        `${backendUrl}/api/customorders`,
+        formData,
+        { headers: { "Content-Type": "application/json" } }
+      );
 
       if (!res.data.success) {
         alert("❌ Failed to submit order");
-        setLoading(false);
         return;
       }
 
-      // ✅ Reset form
+      alert("🤎 Custom order submitted successfully!");
+
       setFormData({
         firstName: "",
         lastName: "",
@@ -47,146 +73,114 @@ const Customorder = () => {
         message: "",
         contactMethod: "Whatsapp",
       });
-
-      alert("💖 Custom order submitted successfully!");
-
-      // ✅ Send WhatsApp/Email using saved currentData
-      const orderMessage =
-        `NEW CUSTOM ORDER REQUEST\n\n` +
-        `Name: ${currentData.firstName} ${currentData.lastName}\n` +
-        `Email: ${currentData.email}\n` +
-        `Phone: ${currentData.phone}\n\n` +
-        `Order Details:\n${currentData.message}`;
-
-      setTimeout(() => {
-        if (currentData.contactMethod === "Whatsapp") {
-          window.open(
-            `https://wa.me/917620874930?text=${encodeURIComponent(orderMessage)}`,
-            "_blank"
-          );
-        } else {
-          window.open(
-            `mailto:prajaktashinde9093@gmail.com?subject=Custom Order Request&body=${encodeURIComponent(orderMessage)}`,
-            "_blank"
-          );
-        }
-      }, 500);
-    } catch (error) {
-      console.error("CUSTOM ORDER ERROR:", error.response?.data || error);
-      alert("❌ Server error. Please try again.");
+    } catch {
+      alert("❌ Server error. Try again.");
     } finally {
       setLoading(false);
     }
   };
 
-return (
-  <>
-    <Navbar />
+  return (
+    <div className="min-h-screen bg-[#faf8f4]">
+      <Navbar />
 
-    {/* Main Wrapper */}
-    <div className="px-4 py-10 sm:px-8 lg:px-10 lg:py-20 
-                    flex flex-col lg:flex-row gap-8 lg:gap-14 
-                    max-w-6xl mx-auto">
+      <div className="pt-24 pb-16 px-4">
+        <div className="max-w-7xl mx-auto">
 
-      {/* Left */}
-      <div className="w-full lg:w-1/2">
-        <p className="text-base sm:text-lg text-center lg:text-left">
-          Looking for something special? Tell us your idea 💕
-        </p>
+          {/* Header */}
+          <div className="text-center mb-16">
+            <span className="inline-block px-6 py-2 bg-[#efe6da] text-[#8b6f4e] rounded-full text-sm font-semibold mb-6">
+              Custom Creations
+            </span>
+            <h1 className="text-5xl font-bold text-[#4a3b2a] mb-4">
+              Bring Your Vision to Life
+            </h1>
+            <p className="text-lg text-[#6b5a44]">
+              Thoughtfully handmade, just for you
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-12">
+
+            {/* Info */}
+            <div className="bg-white rounded-3xl shadow-xl p-8">
+              <h2 className="text-3xl font-bold text-[#4a3b2a] mb-6">
+                How It Works
+              </h2>
+
+              <div className="space-y-6">
+                {["Share idea", "We connect", "Handcraft", "Delivered"].map(
+                  (step, i) => (
+                    <div key={i} className="flex gap-4">
+                      <div className="w-12 h-12 rounded-full bg-[#8b6f4e] text-white flex items-center justify-center font-bold">
+                        {i + 1}
+                      </div>
+                      <p className="text-[#6b5a44] font-medium">{step}</p>
+                    </div>
+                  )
+                )}
+              </div>
+            </div>
+
+            {/* Form */}
+            <div className="bg-white rounded-3xl shadow-2xl p-8">
+              <h2 className="text-3xl font-bold text-[#4a3b2a] mb-6">
+                Tell Us Your Idea
+              </h2>
+
+              <form onSubmit={handleSubmit} className="space-y-5">
+                {["firstName", "lastName", "email", "phone"].map((field) => (
+                  <input
+                    key={field}
+                    name={field}
+                    value={formData[field]}
+                    onChange={handleChange}
+                    placeholder={field.replace(/([A-Z])/g, " $1")}
+                    className={`w-full px-5 py-4 rounded-xl border-2 focus:outline-none
+                      ${
+                        errors[field]
+                          ? "border-red-400"
+                          : "border-[#cbb59a] focus:border-[#8b6f4e]"
+                      }`}
+                  />
+                ))}
+
+                <textarea
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  rows="5"
+                  placeholder="Describe your custom order..."
+                  className={`w-full px-5 py-4 rounded-xl border-2 resize-none
+                    ${
+                      errors.message
+                        ? "border-red-400"
+                        : "border-[#cbb59a] focus:border-[#8b6f4e]"
+                    }`}
+                />
+
+                {/* Divider line */}
+                <div className="h-px bg-[#e6e0d6] my-6"></div>
+
+                {/* Button */}
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className={`w-full bg-[#8b6f4e] hover:bg-[#6f563e]
+                    text-white py-4 rounded-2xl font-bold transition-all
+                    ${loading ? "opacity-50" : "hover:scale-105"}`}
+                >
+                  {loading ? "Submitting..." : "Submit Custom Order"}
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Right - Form */}
-      <form
-        onSubmit={handleSubmit}
-        className="w-full lg:w-1/2 space-y-4"
-      >
-        <input
-          name="firstName"
-          value={formData.firstName}
-          placeholder="First Name *"
-          required
-          onChange={handleChange}
-          className="border p-3 w-full rounded"
-        />
-
-        <input
-          name="lastName"
-          value={formData.lastName}
-          placeholder="Last Name *"
-          required
-          onChange={handleChange}
-          className="border p-3 w-full rounded"
-        />
-
-        <input
-          type="email"
-          name="email"
-          value={formData.email}
-          placeholder="Email *"
-          required
-          onChange={handleChange}
-          className="border p-3 w-full rounded"
-        />
-
-        <input
-          name="phone"
-          value={formData.phone}
-          placeholder="Phone *"
-          required
-          onChange={handleChange}
-          className="border p-3 w-full rounded"
-        />
-
-        <textarea
-          name="message"
-          value={formData.message}
-          rows="4"
-          placeholder="Describe your order..."
-          required
-          onChange={handleChange}
-          className="border p-3 w-full rounded"
-        />
-
-        {/* Contact Method */}
-        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
-          <label className="flex gap-2 items-center cursor-pointer text-sm">
-            <input
-              type="radio"
-              name="contactMethod"
-              value="Whatsapp"
-              checked={formData.contactMethod === "Whatsapp"}
-              onChange={handleChange}
-            />
-            WhatsApp
-          </label>
-
-          <label className="flex gap-2 items-center cursor-pointer text-sm">
-            <input
-              type="radio"
-              name="contactMethod"
-              value="Email"
-              checked={formData.contactMethod === "Email"}
-              onChange={handleChange}
-            />
-            Email
-          </label>
-        </div>
-
-        <button
-          type="submit"
-          disabled={loading}
-          className={`text-white py-3 w-full rounded transition ${
-            loading
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-black hover:bg-gray-800"
-          }`}
-        >
-          {loading ? "Submitting..." : "Submit Custom Order"}
-        </button>
-      </form>
+      <Footer />
     </div>
-  </>
-);
+  );
 };
 
 export default Customorder;

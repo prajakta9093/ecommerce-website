@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import { ShopContext } from "../context/ShopContext";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import { Link } from "react-router-dom";
 
 const Shop = () => {
@@ -8,12 +9,11 @@ const Shop = () => {
   const [filterProducts, setFilterProducts] = useState([]);
   const [category, setCategory] = useState([]);
   const [showCategory, setShowCategory] = useState(true);
-  const [showFilter, setShowFilter] = useState(false); // 🔹 mobile filter toggle
+  const [showFilter, setShowFilter] = useState(false);
 
   const backendUrl = import.meta.env.VITE_BACKENDURL;
   const categories = ["Hoops", "Paintings", "Crochet", "Hair Accessoires"];
 
-  // IMAGE URL HANDLER (unchanged logic)
   const getImageUrl = (product) => {
     const imageArray = product.images || product.image;
     if (!imageArray) return "https://via.placeholder.com/400x400?text=No+Image";
@@ -25,7 +25,6 @@ const Shop = () => {
     return `${backendUrl}/${imagePath.replace(/\\/g, "/")}`;
   };
 
-  // CATEGORY TOGGLE
   const toggleCategory = (e) => {
     const value = e.target.value;
     setCategory((prev) =>
@@ -35,7 +34,6 @@ const Shop = () => {
     );
   };
 
-  // FILTER PRODUCTS
   useEffect(() => {
     if (category.length === 0) setFilterProducts(products);
     else
@@ -49,130 +47,137 @@ const Shop = () => {
   }, [products]);
 
   return (
-    <>
+    <div className="min-h-screen bg-[#f7f3ee]">
       <Navbar />
 
-      <div className="flex flex-col sm:flex-row gap-6 pt-6 sm:pt-10 px-4 sm:px-8">
+      <div className="pt-24 pb-16 px-4">
+        <div className="max-w-7xl mx-auto">
 
-        {/* MOBILE FILTER BUTTON */}
-        <button
-          onClick={() => setShowFilter(!showFilter)}
-          className="sm:hidden w-full py-2 bg-pink-700 text-white rounded-lg mb-2"
-        >
-          {showFilter ? "Hide Filters" : "Show Filters"}
-        </button>
-
-        {/* FILTER SIDEBAR */}
-        <div
-          className={`${
-            showFilter ? "block" : "hidden"
-          } sm:block min-w-[260px] bg-white border border-gray-200 rounded-lg p-4 sm:p-6 h-fit`}
-        >
-          <h2 className="text-xl sm:text-2xl font-light mb-4 text-center">
-            Filter by
-          </h2>
-          <hr className="mb-4" />
-
-          <div>
-            <div
-              className="flex justify-between items-center cursor-pointer mb-4"
-              onClick={() => setShowCategory(!showCategory)}
-            >
-              <h3 className="text-sm sm:text-base font-medium">Category</h3>
-              <span className="text-xl">{showCategory ? "−" : "+"}</span>
-            </div>
-
-            {showCategory && (
-              <div className="space-y-2">
-                <label className="flex items-center gap-3">
-                  <input
-                    type="checkbox"
-                    checked={category.length === categories.length}
-                    onChange={(e) =>
-                      setCategory(e.target.checked ? categories : [])
-                    }
-                  />
-                  <span className="font-medium">All</span>
-                </label>
-
-                {categories.map((item) => (
-                  <label key={item} className="flex items-center gap-3">
-                    <input
-                      type="checkbox"
-                      value={item}
-                      onChange={toggleCategory}
-                      checked={category.includes(item)}
-                    />
-                    <span className="text-sm">{item}</span>
-                  </label>
-                ))}
-              </div>
-            )}
-
-            {category.length > 0 && (
-              <button
-                onClick={() => setCategory([])}
-                className="mt-4 w-full py-2 bg-pink-700 text-white text-sm rounded-md"
-              >
-                Clear Filters
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* PRODUCTS */}
-        <div className="flex-1">
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-2">
-            <h1 className="text-xl sm:text-2xl font-medium">
-              All Collections
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="text-4xl md:text-5xl font-bold text-[#5b3a29] mb-2">
+              Our Collections
             </h1>
-            <p className="text-xs sm:text-sm text-gray-600">
-              Showing {filterProducts.length} products
+            <p className="text-[#7a5a44]">
+              Handcrafted with love, just for you
             </p>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
-            {filterProducts.map((item) => (
-              <Link
-                to={`/product/${item._id}`}
-                key={item._id}
-                className="group"
-              >
-                <div className="overflow-hidden rounded-lg bg-gray-100">
-                  <img
-                    src={getImageUrl(item)}
-                    alt={item.name}
-                    className="w-full h-44 sm:h-56 object-cover group-hover:scale-105 transition"
-                    onError={(e) =>
-                      (e.target.src =
-                        "https://via.placeholder.com/400x400?text=No+Image")
-                    }
-                  />
+          <div className="flex flex-col md:flex-row gap-8">
+
+            {/* Mobile Filter Button */}
+            <button
+              onClick={() => setShowFilter(!showFilter)}
+              className="md:hidden w-full bg-[#8b5e3c] text-white py-3 rounded-xl font-semibold shadow-md"
+            >
+              {showFilter ? "Hide Filters ✕" : "Show Filters 🔍"}
+            </button>
+
+            {/* Filter Sidebar */}
+            <div className={`${showFilter ? "block" : "hidden"} md:block w-full md:w-80`}>
+              <div className="bg-white rounded-3xl shadow-lg p-6 sticky top-28">
+                <h2 className="text-2xl font-bold text-[#5b3a29] mb-6 flex items-center gap-2">
+                  🎨 Filters
+                </h2>
+
+                <div
+                  className="flex justify-between items-center cursor-pointer mb-4 p-4 bg-[#f3ede7] rounded-xl"
+                  onClick={() => setShowCategory(!showCategory)}
+                >
+                  <h3 className="font-semibold text-[#5b3a29]">Category</h3>
+                  <span className="text-xl">{showCategory ? "−" : "+"}</span>
                 </div>
 
-                <div className="mt-2">
-                  <p className="text-xs sm:text-sm text-gray-700 truncate">
-                    {item.name}
-                  </p>
-                  <p className="text-sm sm:text-base font-semibold">
-                    ₹{item.price}
-                  </p>
-                </div>
-              </Link>
-            ))}
-          </div>
+                {showCategory && (
+                  <div className="space-y-3 mb-6">
+                    <label className="flex items-center gap-3 p-3 rounded-lg cursor-pointer hover:bg-[#f3ede7]">
+                      <input
+                        type="checkbox"
+                        checked={category.length === categories.length}
+                        onChange={(e) =>
+                          setCategory(e.target.checked ? categories : [])
+                        }
+                        className="w-5 h-5 accent-[#8b5e3c]"
+                      />
+                      <span className="font-semibold text-[#5b3a29]">
+                        All Categories
+                      </span>
+                    </label>
 
-          {filterProducts.length === 0 && (
-            <div className="text-center py-16">
-              <p className="text-lg text-gray-500">No products found</p>
-              <p className="text-sm text-gray-400">
-                Try adjusting your filters
-              </p>
+                    {categories.map((item) => (
+                      <label
+                        key={item}
+                        className="flex items-center gap-3 p-3 rounded-lg cursor-pointer hover:bg-[#f3ede7]"
+                      >
+                        <input
+                          type="checkbox"
+                          value={item}
+                          onChange={toggleCategory}
+                          checked={category.includes(item)}
+                          className="w-5 h-5 accent-[#8b5e3c]"
+                        />
+                        <span className="text-[#6d4c3d]">{item}</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
+
+                {category.length > 0 && (
+                  <button
+                    onClick={() => setCategory([])}
+                    className="w-full bg-[#6b3f2b] text-white py-3 rounded-xl font-semibold"
+                  >
+                    Clear Filters ✕
+                  </button>
+                )}
+              </div>
             </div>
-          )}
+
+            {/* Products Grid */}
+            <div className="flex-1">
+              <p className="text-[#6d4c3d] mb-6">
+                <span className="font-semibold text-[#5b3a29]">
+                  {filterProducts.length}
+                </span>{" "}
+                products found
+              </p>
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+                {filterProducts.map((item) => (
+                  <Link to={`/product/${item._id}`} key={item._id}>
+                    <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition overflow-hidden">
+                      <div className="aspect-square bg-[#eee6de]">
+                        <img
+                          src={getImageUrl(item)}
+                          alt={item.name}
+                          className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                        />
+                      </div>
+
+                      <div className="p-4">
+                        <p className="text-sm text-[#6d4c3d] truncate">
+                          {item.name}
+                        </p>
+                        <div className="flex justify-between items-center mt-2">
+                          <p className="text-lg font-bold text-[#8b5e3c]">
+                            ₹{item.price}
+                          </p>
+                          <span className="text-xs bg-[#f3ede7] text-[#6b3f2b] px-3 py-1 rounded-full">
+                            {item.category}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </>
+
+      <Footer />
+    </div>
   );
 };
 

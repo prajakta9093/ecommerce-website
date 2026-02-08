@@ -2,43 +2,51 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <footer className="mt-10 bg-pink-200 text-gray-800 shadow-md border-t border-pink-300 w-full overflow-x-hidden">
-      
-      {/* Footer Content */}
-      <div className="flex flex-col items-center justify-center text-center gap-4 py-8 max-w-4xl mx-auto px-4">
+    <footer className="w-full bg-[#6B3E2E] text-white">
 
-        {/* Contact Section */}
-        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs sm:text-sm">
+      {/* Content */}
+      <div className="max-w-4xl mx-auto px-4 py-10 sm:py-12 flex flex-col items-center text-center gap-5">
+
+        {/* Brand line */}
+        <p className="text-sm sm:text-base font-light tracking-wide text-white/90">
+          Thoughtfully handmade, stitch by stitch
+        </p>
+
+        {/* Divider */}
+        <div className="w-20 h-[2px] bg-[#8B5A3C] rounded-full"></div>
+
+        {/* Contact */}
+        <div className="flex flex-wrap items-center justify-center gap-4 text-xs sm:text-sm text-white/90">
 
           <a
             href="tel:+917620874930"
-            className="hover:text-pink-600 font-medium transition flex items-center gap-2"
+            className="flex items-center gap-2 hover:text-white transition-colors"
           >
             📞 <span className="break-all">+91 7620874930</span>
           </a>
 
-          <span className="hidden sm:block text-gray-500">|</span>
+          <span className="hidden sm:block text-white/40">|</span>
 
           <a
             href="mailto:contact@yarnyapper.com"
-            className="hover:text-pink-600 font-medium transition flex items-center gap-2"
+            className="flex items-center gap-2 hover:text-white transition-colors"
           >
             ✉️ <span className="break-all">contact@yarnyapper.com</span>
           </a>
 
-          <span className="hidden sm:block text-gray-500">|</span>
+          <span className="hidden sm:block text-white/40">|</span>
 
-          <div className="flex items-center gap-2 font-medium">
+          <div className="flex items-center gap-2">
             📍 Mumbai, Maharashtra, India
           </div>
 
         </div>
       </div>
 
-      {/* Bottom Section */}
-      <div className="border-t border-pink-400">
-        <p className="py-3 text-center text-xs font-medium text-gray-700 px-4">
-          © {new Date().getFullYear()} Yarn Yapper — All Rights Reserved.
+      {/* Bottom */}
+      <div className="border-t border-white/25">
+        <p className="py-4 text-center text-[11px] sm:text-xs text-white/80 tracking-wide">
+          © {new Date().getFullYear()} Yarn Yapper · All Rights Reserved
         </p>
       </div>
 

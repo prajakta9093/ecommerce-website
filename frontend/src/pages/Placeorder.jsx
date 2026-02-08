@@ -1,6 +1,7 @@
 import React, { useState, useContext } from "react";
 import { ShopContext } from "../context/ShopContext";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -31,16 +32,10 @@ const Placeorder = () => {
   const [paymentMethod, setPaymentMethod] = useState("COD");
   const [loading, setLoading] = useState(false);
 
-  /* =========================
-     FORM HANDLERS
-  ========================= */
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  /* =========================
-     LOAD RAZORPAY SCRIPT
-  ========================= */
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
       const script = document.createElement("script");
@@ -51,9 +46,6 @@ const Placeorder = () => {
     });
   };
 
-  /* =========================
-     RAZORPAY PAYMENT FLOW
-  ========================= */
   const handleRazorpayPayment = async (orderData) => {
     const res = await loadRazorpayScript();
     if (!res) {
@@ -65,18 +57,11 @@ const Placeorder = () => {
     try {
       const token = localStorage.getItem("token");
 
-      // ✅ Create Razorpay Order
       const result = await axios.post(
         `${backendUrl}/api/order/create-razorpay-order`,
         { amount: orderData.totalAmount },
         { headers: { token } }
       );
-
-      if (!result.data.success) {
-        alert(result.data.message || "Failed to create payment order");
-        setLoading(false);
-        return;
-      }
 
       const { orderId, amount, currency } = result.data;
 
@@ -84,7 +69,7 @@ const Placeorder = () => {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,
         amount,
         currency,
-        name: "Ecommerce Store",
+        name: "Yarn Yapper",
         description: "Order Payment",
         order_id: orderId,
         handler: async function (response) {
@@ -101,14 +86,12 @@ const Placeorder = () => {
             );
 
             if (verifyRes.data.success) {
-              alert("Payment successful!");
               clearCart();
               navigate("/orders");
             } else {
               alert("Payment verification failed");
             }
-          } catch (error) {
-            console.error(error);
+          } catch {
             alert("Payment verification failed");
           } finally {
             setLoading(false);
@@ -119,38 +102,21 @@ const Placeorder = () => {
           email: formData.email,
           contact: formData.phone,
         },
-        theme: { color: "#16a34a" },
+        theme: { color: "#6f4e37" }, // cocoa brown
       };
 
-      const paymentObject = new window.Razorpay(options);
-      paymentObject.open();
-
-      paymentObject.on("payment.failed", () => {
-        alert("Payment failed");
-        setLoading(false);
-      });
-
-    } catch (error) {
-      console.error("Razorpay error:", error);
+      new window.Razorpay(options).open();
+    } catch {
       alert("Failed to initialize payment");
       setLoading(false);
     }
   };
 
-  /* =========================
-     PLACE ORDER
-  ========================= */
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const token = localStorage.getItem("token");
-    if (!token) {
-      alert("Please login first");
-      navigate("/login");
-      return;
-    }
+    if (!token) return navigate("/login");
 
-    // Prepare cart items
     const orderItems = [];
     for (const itemId in cartitems) {
       const product = products.find((p) => p._id === itemId);
@@ -160,24 +126,11 @@ const Placeorder = () => {
           name: product.name,
           price: product.price,
           quantity: cartitems[itemId].quantity,
-          image: product.images?.[0] || "",
         });
       }
     }
 
-    if (orderItems.length === 0) {
-      alert("Cart is empty");
-      return;
-    }
-
     const totalAmount = getCartAmount() + delivery_fee;
-
-    // 🔴 Razorpay minimum ₹1
-    if (paymentMethod === "Razorpay" && totalAmount < 1) {
-      alert("Minimum order amount is ₹1");
-      return;
-    }
-
     const orderData = {
       items: orderItems,
       totalAmount,
@@ -192,178 +145,129 @@ const Placeorder = () => {
       if (paymentMethod === "Razorpay") {
         await handleRazorpayPayment(orderData);
       } else {
-        const res = await axios.post(
+        await axios.post(
           `${backendUrl}/api/order/place`,
           orderData,
           { headers: { token } }
         );
-
-        if (res.data.success) {
-          alert("Order placed successfully");
-          clearCart();
-          navigate("/orders");
-        } else {
-          alert(res.data.message || "Order failed");
-        }
-        setLoading(false);
+        clearCart();
+        navigate("/orders");
       }
-    } catch (error) {
-      console.error(error);
+    } catch {
       alert("Order failed");
+    } finally {
       setLoading(false);
     }
   };
 
-  /* =========================
-     UI
-  ========================= */
   return (
-  <>
-    <Navbar />
+    <div className="min-h-screen bg-[#f8f5f2]">
+      <Navbar />
 
-    <div className="min-h-screen bg-gray-100 py-6 px-3 sm:px-4">
-      <div className="max-w-5xl mx-auto">
-        <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-gray-800">
-          Checkout
-        </h1>
+      <div className="pt-24 pb-16 px-4">
+        <div className="max-w-7xl mx-auto">
 
-        <form
-          onSubmit={handleSubmit}
-          className="grid grid-cols-1 md:grid-cols-2 gap-6"
-        >
-          {/* SHIPPING DETAILS */}
-          <div className="bg-white p-4 sm:p-6 rounded-xl shadow space-y-4">
-            <h2 className="text-lg sm:text-xl font-semibold text-gray-700">
-              Shipping Details
-            </h2>
+          <h1 className="text-4xl font-bold text-[#6f4e37] mb-6">
+            Checkout
+          </h1>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {Object.keys(formData).map((field) => (
-                <div key={field} className="flex flex-col">
-                  <label className="text-xs sm:text-sm text-gray-600 capitalize mb-1">
-                    {field}
-                  </label>
-                  <input
-                    type="text"
-                    name={field}
-                    value={formData[field]}
-                    onChange={handleChange}
-                    required
-                    className="p-3 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-                  />
-                </div>
-              ))}
-            </div>
+          <form
+            onSubmit={handleSubmit}
+            className="grid grid-cols-1 lg:grid-cols-3 gap-8"
+          >
 
-            {/* PAYMENT METHOD */}
-            <div className="space-y-2">
-              <h3 className="font-semibold text-gray-700 text-sm">
-                Payment Method
-              </h3>
+            {/* Shipping */}
+            <div className="lg:col-span-2 bg-white rounded-3xl shadow p-8">
+              <h2 className="text-2xl font-bold text-[#5a3e2b] mb-6">
+                Shipping Details
+              </h2>
 
-              <label className="flex items-center gap-2 text-sm">
-                <input
-                  type="radio"
-                  value="COD"
-                  checked={paymentMethod === "COD"}
-                  onChange={(e) => setPaymentMethod(e.target.value)}
-                />
-                Cash on Delivery
-              </label>
-
-              <label className="flex items-center gap-2 text-sm">
-                <input
-                  type="radio"
-                  value="Razorpay"
-                  checked={paymentMethod === "Razorpay"}
-                  onChange={(e) => setPaymentMethod(e.target.value)}
-                />
-                Pay Online (Razorpay)
-              </label>
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className={`w-full py-3 rounded-lg text-white text-sm font-semibold transition
-                ${
-                  loading
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-green-600 hover:bg-green-700"
-                }`}
-            >
-              {loading
-                ? "Processing..."
-                : paymentMethod === "Razorpay"
-                ? "Proceed to Payment"
-                : "Place Order"}
-            </button>
-          </div>
-
-          {/* ORDER SUMMARY */}
-          <div className="bg-white p-4 sm:p-6 rounded-xl shadow h-fit space-y-4">
-            <h2 className="text-lg sm:text-xl font-semibold text-gray-700">
-              Order Summary
-            </h2>
-
-            <div className="space-y-3 max-h-56 overflow-y-auto text-sm">
-              {Object.keys(cartitems).map((itemId) => {
-                const product = products.find(
-                  (p) => String(p._id) === String(itemId)
-                );
-
-                if (!product || cartitems[itemId].quantity === 0)
-                  return null;
-
-                return (
-                  <div
-                    key={itemId}
-                    className="flex justify-between gap-2 border-b pb-2"
-                  >
-                    <div>
-                      <p className="font-medium text-gray-800">
-                        {product.name}
-                      </p>
-                      <p className="text-gray-500">
-                        Qty: {cartitems[itemId].quantity}
-                      </p>
-                    </div>
-
-                    <p className="font-semibold text-green-600">
-                      ₹{product.price * cartitems[itemId].quantity}
-                    </p>
+              <div className="grid sm:grid-cols-2 gap-5">
+                {Object.keys(formData).map((field) => (
+                  <div key={field} className={field === "address" ? "sm:col-span-2" : ""}>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2 capitalize">
+                      {field}
+                    </label>
+                    <input
+                      type="text"
+                      name={field}
+                      value={formData[field]}
+                      onChange={handleChange}
+                      required
+                      className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:border-[#6f4e37] focus:ring-2 focus:ring-[#6f4e37]/20"
+                    />
                   </div>
-                );
-              })}
-            </div>
-
-            <hr />
-
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between text-gray-600">
-                <span>Subtotal</span>
-                <span>₹{getCartAmount()}</span>
+                ))}
               </div>
 
-              <div className="flex justify-between text-gray-600">
-                <span>Delivery</span>
-                <span>₹{delivery_fee}</span>
+              {/* Payment */}
+              <div className="mt-8">
+                <h3 className="font-bold mb-4 text-[#5a3e2b]">
+                  Payment Method
+                </h3>
+
+                {["COD", "Razorpay"].map((method) => (
+                  <label
+                    key={method}
+                    className={`flex items-center p-4 mb-3 border rounded-xl cursor-pointer ${
+                      paymentMethod === method
+                        ? "border-[#6f4e37] bg-[#f3ece6]"
+                        : "border-gray-200"
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      value={method}
+                      checked={paymentMethod === method}
+                      onChange={(e) => setPaymentMethod(e.target.value)}
+                      className="accent-[#6f4e37]"
+                    />
+                    <span className="ml-3 font-medium">
+                      {method === "COD" ? "Cash on Delivery" : "Pay Online (Razorpay)"}
+                    </span>
+                  </label>
+                ))}
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full mt-8 bg-[#6f4e37] text-white py-4 rounded-2xl font-bold hover:bg-[#5a3e2b] transition"
+              >
+                {loading ? "Processing..." : "Place Order"}
+              </button>
+            </div>
+
+            {/* Summary */}
+            <div className="bg-white rounded-3xl shadow p-8 sticky top-28">
+              <h2 className="text-2xl font-bold text-[#5a3e2b] mb-6">
+                Order Summary
+              </h2>
+
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span>Subtotal</span>
+                  <span>₹{getCartAmount()}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Delivery</span>
+                  <span>₹{delivery_fee}</span>
+                </div>
+              </div>
+
+              <div className="mt-6 p-4 bg-[#f3ece6] rounded-xl flex justify-between font-bold text-[#6f4e37]">
+                <span>Total</span>
+                <span>₹{getCartAmount() + delivery_fee}</span>
               </div>
             </div>
 
-            <hr />
-
-            <div className="flex justify-between text-base sm:text-lg font-bold text-gray-800">
-              <span>Total</span>
-              <span>₹{getCartAmount() + delivery_fee}</span>
-            </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
-    </div>
-  </>
-);
 
+      <Footer />
+    </div>
+  );
 };
 
 export default Placeorder;

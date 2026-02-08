@@ -16,21 +16,14 @@ const Cart = () => {
 
   const [cartData, setCartData] = useState([]);
 
-  /* ---------- BUILD CART DATA ---------- */
   useEffect(() => {
     const data = [];
-
     for (const itemId in cartitems) {
       const item = cartitems[itemId];
-
       if (item.quantity > 0) {
-        data.push({
-          id: String(itemId),
-          quantity: item.quantity,
-        });
+        data.push({ id: String(itemId), quantity: item.quantity });
       }
     }
-
     setCartData(data);
   }, [cartitems]);
 
@@ -40,32 +33,46 @@ const Cart = () => {
 
   return (
     <>
-      {/* -------- NAVBAR -------- */}
       <Navbar />
 
-      <div className="min-h-screen bg-gray-50 py-6 px-3 sm:px-8">
-        <div className="max-w-6xl mx-auto">
-          <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-gray-800">
-            Shopping Cart 🛒
-          </h1>
+      <div className="min-h-screen bg-[#faf8f4] pt-24 pb-12 px-3 sm:px-8">
+        <div className="max-w-7xl mx-auto">
+
+          {/* Header */}
+          <div className="mb-10">
+            <h1 className="text-4xl md:text-5xl font-serif font-bold text-[#5a3e2b] mb-2">
+              Shopping Cart
+            </h1>
+            <p className="text-[#7a6a5a]">
+              {cartData.length === 0
+                ? "Your cart is waiting to be filled"
+                : `${cartData.length} item${cartData.length > 1 ? "s" : ""} in your cart`}
+            </p>
+          </div>
 
           {cartData.length === 0 ? (
-            <div className="bg-white rounded-lg shadow-md p-10 text-center">
-              <p className="text-xl text-gray-500 mb-4">Your cart is empty</p>
-              <p className="text-gray-400 mb-6">
-                Add some beautiful handmade items to get started!
+            <div className="bg-white rounded-3xl shadow-xl p-16 text-center">
+              <div className="w-28 h-28 mx-auto mb-6 bg-[#e6d8c3] rounded-full flex items-center justify-center">
+                <span className="text-5xl">🧺</span>
+              </div>
+              <h2 className="text-3xl font-serif font-bold text-[#5a3e2b] mb-4">
+                Your cart is empty
+              </h2>
+              <p className="text-[#7a6a5a] mb-8">
+                Add something handmade and beautiful 🌾
               </p>
               <Link
                 to="/Shop"
-                className="inline-block bg-pink-600 text-white px-6 py-3 rounded-lg hover:bg-pink-700 transition"
+                className="inline-block bg-[#8b5e34] text-white px-10 py-4 rounded-full font-semibold hover:bg-[#74492b] transition"
               >
-                Continue Shopping
+                Explore Shop
               </Link>
             </div>
           ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* -------- ITEMS -------- */}
-              <div className="lg:col-span-2 space-y-4">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+              {/* Items */}
+              <div className="lg:col-span-2 space-y-5">
                 {cartData.map((item, index) => {
                   const productData = products.find(
                     (p) => String(p._id) === item.id
@@ -75,125 +82,119 @@ const Cart = () => {
                   return (
                     <div
                       key={index}
-                      className="bg-white rounded-lg shadow-md p-4 flex flex-col sm:flex-row gap-4"
+                      className="bg-white rounded-2xl shadow-md p-6 hover:shadow-lg transition"
                     >
-                      {/* PRODUCT DETAILS */}
-                      <div className="flex-1">
-                        <Link to={`/product/${productData._id}`}>
-                          <h3 className="text-lg font-semibold text-gray-800 hover:text-pink-600 transition">
-                            {productData.name}
-                          </h3>
-                        </Link>
+                      <div className="flex flex-col sm:flex-row gap-6">
 
-                        <p className="text-pink-600 font-semibold mt-1">
-                          {currency}
-                          {productData.price}
-                        </p>
+                        {productData.images?.[0] && (
+                          <Link to={`/product/${productData._id}`}>
+                            <img
+                              src={productData.images[0]}
+                              alt={productData.name}
+                              className="w-28 h-28 object-cover rounded-xl ring-1 ring-[#e6d8c3]"
+                            />
+                          </Link>
+                        )}
 
-                        {/* Quantity */}
-                        <div className="flex items-center gap-3 mt-3">
+                        <div className="flex-1">
+                          <Link to={`/product/${productData._id}`}>
+                            <h3 className="text-xl font-semibold text-[#5a3e2b] hover:text-[#8b5e34] transition">
+                              {productData.name}
+                            </h3>
+                          </Link>
+
+                          <p className="mt-2 text-lg font-bold text-[#8b5e34]">
+                            {currency}{productData.price}
+                          </p>
+
+                          {/* Quantity */}
+                          <div className="flex items-center gap-3 mt-4">
+                            <button
+                              onClick={() =>
+                                item.quantity <= 1
+                                  ? removeFromCart(item.id)
+                                  : updateQuantity(item.id, null, item.quantity - 1)
+                              }
+                              className="w-8 h-8 rounded-full bg-[#e6d8c3] text-[#5a3e2b] font-bold"
+                            >
+                              −
+                            </button>
+
+                            <span className="w-10 text-center font-semibold">
+                              {item.quantity}
+                            </span>
+
+                            <button
+                              onClick={() =>
+                                updateQuantity(item.id, null, item.quantity + 1)
+                              }
+                              className="w-8 h-8 rounded-full bg-[#e6d8c3] text-[#5a3e2b] font-bold"
+                            >
+                              +
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Price */}
+                        <div className="text-right">
+                          <p className="text-sm text-[#7a6a5a]">Subtotal</p>
+                          <p className="text-2xl font-bold text-[#8b5e34]">
+                            {currency}{(productData.price * item.quantity).toFixed(2)}
+                          </p>
+
                           <button
-                            onClick={() =>
-                              item.quantity <= 1
-                                ? removeFromCart(item.id)
-                                : updateQuantity(
-                                    item.id,
-                                    null,
-                                    item.quantity - 1
-                                  )
-                            }
-                            className="w-8 h-8 rounded-full border hover:bg-gray-100 flex items-center justify-center font-bold"
+                            onClick={() => removeFromCart(item.id)}
+                            className="mt-3 text-sm text-red-600 hover:underline"
                           >
-                            −
-                          </button>
-
-                          <span className="w-10 text-center font-medium">
-                            {item.quantity}
-                          </span>
-
-                          <button
-                            onClick={() =>
-                              updateQuantity(
-                                item.id,
-                                null,
-                                item.quantity + 1
-                              )
-                            }
-                            className="w-8 h-8 rounded-full border hover:bg-gray-100 flex items-center justify-center font-bold"
-                          >
-                            +
+                            Remove
                           </button>
                         </div>
-                      </div>
-
-                      {/* PRICE + REMOVE */}
-                      <div className="flex sm:flex-col items-center sm:items-end justify-between gap-2">
-                        <button
-                          onClick={() => removeFromCart(item.id)}
-                          className="text-red-500 hover:text-red-700 text-sm font-medium"
-                        >
-                          🗑 Remove
-                        </button>
-
-                        <p className="text-lg font-semibold text-gray-800">
-                          {currency}
-                          {(productData.price * item.quantity).toFixed(2)}
-                        </p>
                       </div>
                     </div>
                   );
                 })}
               </div>
 
-              {/* -------- SUMMARY -------- */}
-              <div className="lg:col-span-1">
-                <div className="bg-white rounded-lg shadow-md p-6 sticky top-6">
-                  <h2 className="text-xl font-bold mb-4 text-gray-800">
+              {/* Summary */}
+              <div>
+                <div className="bg-white rounded-3xl shadow-xl p-8 sticky top-28">
+                  <h2 className="text-2xl font-serif font-bold text-[#5a3e2b] mb-6 text-center">
                     Order Summary
                   </h2>
 
-                  <div className="space-y-3 mb-4">
-                    <div className="flex justify-between text-gray-600">
+                  <div className="space-y-4">
+                    <div className="flex justify-between">
                       <span>Subtotal</span>
-                      <span>
-                        {currency}
-                        {subtotal.toFixed(2)}
+                      <span className="font-semibold">
+                        {currency}{subtotal.toFixed(2)}
                       </span>
                     </div>
 
-                    <div className="flex justify-between text-gray-600">
+                    <div className="flex justify-between">
                       <span>Delivery</span>
-                      {subtotal >= 500 ? (
-                        <span className="text-green-600 font-medium">FREE</span>
-                      ) : (
-                        <span>
-                          {currency}
-                          {delivery_fee.toFixed(2)}
-                        </span>
-                      )}
+                      <span className="font-semibold">
+                        {actualDeliveryFee === 0 ? "FREE" : `${currency}${delivery_fee}`}
+                      </span>
                     </div>
 
                     <hr />
 
-                    <div className="flex justify-between text-xl font-bold">
+                    <div className="flex justify-between text-lg font-bold text-[#8b5e34]">
                       <span>Total</span>
-                      <span className="text-pink-600">
-                        {currency}
-                        {total.toFixed(2)}
-                      </span>
+                      <span>{currency}{total.toFixed(2)}</span>
                     </div>
                   </div>
 
                   <Link
                     to="/Placeorder"
-                    className="w-full bg-pink-600 text-white py-3 rounded-lg block text-center font-semibold hover:bg-pink-700 transition mb-3"
+                    className="block mt-8 bg-[#8b5e34] text-white py-4 rounded-full text-center font-semibold hover:bg-[#74492b] transition"
                   >
                     Proceed to Checkout
                   </Link>
 
                   <Link
                     to="/Shop"
-                    className="block text-center text-pink-600 hover:text-pink-700 text-sm font-medium"
+                    className="block text-center mt-4 text-[#8b5e34] hover:underline"
                   >
                     ← Continue Shopping
                   </Link>

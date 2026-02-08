@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import emailjs from '@emailjs/browser';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -20,6 +21,8 @@ const Contact = () => {
     email: false,
     message: false
   });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validateField = (name, value) => {
     let error = "";
@@ -80,28 +83,38 @@ const Contact = () => {
     setTouched({ firstName: true, email: true, message: true });
 
     if (!Object.values(newErrors).some(Boolean)) {
+      setIsSubmitting(true);
+
       try {
-        const response = await fetch(
-          "http://localhost:9000/api/contact/submit",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(formData)
-          }
+        // Initialize EmailJS with your public key
+        emailjs.init('-BFJJB88AxS0eYlUZ'); // Replace with your actual public key
+
+        // Template parameters - matching your EmailJS template variables
+        const templateParams = {
+          name: formData.firstName,      // Changed from from_name to name
+          email: formData.email,          // Changed from from_email to email
+          message: formData.message,
+          title: "Contact Form Submission" // For {{title}} in subject
+        };
+
+        const response = await emailjs.send(
+          'service_i2g13cn',      // Replace with your service ID
+          'template_gp1ed59',     // Replace with your template ID
+          templateParams
         );
 
-        const data = await response.json();
+        console.log('SUCCESS!', response.status, response.text);
+        alert("🤎 Thank you! We'll get back to you soon.");
+        
+        setFormData({ firstName: "", email: "", message: "" });
+        setErrors({ firstName: "", email: "", message: "" });
+        setTouched({ firstName: false, email: false, message: false });
 
-        if (data.success) {
-          alert("🤎 Thank you! We’ll get back to you soon.");
-          setFormData({ firstName: "", email: "", message: "" });
-          setErrors({ firstName: "", email: "", message: "" });
-          setTouched({ firstName: false, email: false, message: false });
-        } else {
-          alert("❌ Failed to submit. Try again.");
-        }
       } catch (error) {
-        alert("❌ Network error. Please try again.");
+        console.error('FAILED...', error);
+        alert(`❌ Failed to send message: ${error.text || error.message || 'Unknown error'}`);
+      } finally {
+        setIsSubmitting(false);
       }
     }
   };
@@ -207,7 +220,7 @@ const Contact = () => {
                       {errors.message}
                     </p>
                   )}
-                  <p className="text-gray-500 text-sm">
+                  <p className="text-gray-500 text-sm ml-auto">
                     {formData.message.length}/500
                   </p>
                 </div>
@@ -217,12 +230,15 @@ const Contact = () => {
               <div className="text-center pt-4">
                 <button
                   type="submit"
-                  className="bg-[#5C3A21] hover:bg-[#8B5E3C]
+                  disabled={isSubmitting}
+                  className={`bg-[#5C3A21] hover:bg-[#8B5E3C]
                              text-white font-semibold px-10 py-3
                              rounded-full shadow-md transition
-                             transform hover:scale-105"
+                             transform hover:scale-105
+                             disabled:opacity-50 disabled:cursor-not-allowed
+                             disabled:transform-none`}
                 >
-                  Send Message
+                  {isSubmitting ? "Sending..." : "Send Message"}
                 </button>
               </div>
 

@@ -1,16 +1,38 @@
 @import "tailwindcss";
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-a.active hr {
-  display: block;
-}
-
 @layer base {
+  :root {
+    --color-bg-primary: #faf7f2; /* slightly warmer/brighter off-white */
+    --color-bg-secondary: #ffffff;
+    
+    /* Richer Pastels */
+    --color-accent-pink: #f4c2c2;   /* Baby Pink */
+    --color-accent-sage: #cce3de;   /* Soft Mint/Sage */
+    --color-accent-blue: #d6e2e9;   /* Powder Blue */
+    --color-accent-lilac: #e2d4e0;  /* Soft Lilac */
+    --color-accent-yellow: #fcedda; /* Pale warm yellow */
+    --color-accent-sand: #e6dfce;
+
+    --color-text-main: #2b2824; /* Darker for better contrast with pastels */
+    --color-text-light: #6e655a;
+  }
+
   html, body {
     @apply w-full overflow-x-hidden;
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-main);
+    font-family: 'Inter', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
+    color: var(--color-text-main);
   }
 
   * {
@@ -22,3 +44,29 @@ a.active hr {
   }
 }
 
+@layer utilities {
+  .shadow-soft {
+    box-shadow: 0 10px 40px -10px rgba(43, 40, 36, 0.08);
+  }
+  
+  .shadow-soft-hover {
+    box-shadow: 0 20px 40px -10px rgba(43, 40, 36, 0.15);
+  }
+
+  /* Make buttons more colorful */
+  .btn-primary {
+    @apply bg-[#f4c2c2] text-[#2b2824] px-8 py-3 rounded-full font-semibold transition-all duration-300 hover:bg-[#eab3b3] hover:shadow-soft hover:-translate-y-0.5;
+  }
+
+  .btn-secondary {
+    @apply bg-[#cce3de] text-[#2b2824] px-8 py-3 rounded-full font-semibold transition-all duration-300 hover:bg-[#b8d6d0] hover:shadow-soft hover:-translate-y-0.5;
+  }
+
+  .btn-outline {
+    @apply border-2 border-[#d6e2e9] bg-white text-[#2b2824] px-8 py-3 rounded-full font-semibold transition-all duration-300 hover:bg-[#d6e2e9] hover:shadow-soft hover:-translate-y-0.5;
+  }
+}
+
+a.active hr {
+  display: block;
+}

@@ -4,102 +4,91 @@ import yarnHeroImage from '../assets/yarn-hero.jpg';
 
 const Hero = () => {
   return (
-    <section
-      className="relative w-full flex items-center justify-center overflow-hidden"
-      style={{ minHeight: 'calc(100vh - 80px)' }}
-    >
-      {/* Background Image */}
-      <div
-        className="absolute inset-0 bg-cover bg-center scale-105"
-        style={{
-          backgroundImage: `url(${yarnHeroImage})`,
-          filter: 'brightness(0.75)',
-        }}
-      />
+    <section className="relative w-full min-h-[90vh] flex flex-col md:flex-row items-center justify-between bg-transparent pt-24 px-6 md:px-12 lg:px-24 overflow-hidden">
+      
+      {/* Decorative Background Elements */}
+      <div className="absolute top-0 left-0 w-96 h-96 bg-[#f4c2c2] rounded-full blur-[120px] opacity-30 -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
+      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-[#cce3de] rounded-full blur-[150px] opacity-40 translate-x-1/3 translate-y-1/3 pointer-events-none"></div>
 
-      {/* Warm Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/20"></div>
-
-      {/* Soft Brown Glow */}
-      <div className="absolute inset-0">
-        <div className="absolute top-1/3 left-1/4 w-72 h-72 bg-[#c4a484]/20 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-[#a67c52]/20 rounded-full blur-3xl"></div>
-      </div>
-
-      {/* Content */}
-      <div className="relative z-10 text-center text-white px-4 py-20 w-full max-w-6xl mx-auto">
-
-        {/* Top Decorative Line */}
-        <div className="flex items-center justify-center mb-10">
-          <div className="h-px w-24 bg-gradient-to-r from-transparent to-[#c4a484]"></div>
-          <div className="mx-4 w-2 h-2 rounded-full bg-[#c4a484]"></div>
-          <div className="h-px w-24 bg-gradient-to-l from-transparent to-[#c4a484]"></div>
+      {/* Text Content */}
+      <div className="relative z-10 w-full md:w-1/2 flex flex-col items-center md:items-start text-center md:text-left pt-12 md:pt-0 mb-12 md:mb-0">
+        
+        <div className="inline-block px-5 py-2 mb-6 border border-[#f4c2c2] rounded-full text-[#6e655a] text-sm uppercase tracking-widest font-semibold bg-white/60 backdrop-blur-sm shadow-sm">
+          Aesthetic Handmade Crafts
         </div>
-
-        {/* Heading */}
-        <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-serif tracking-wider mb-6 animate-fadeInUp">
-          <span className="bg-gradient-to-r from-white via-[#f3ede4] to-[#e6d8c3] bg-clip-text text-transparent drop-shadow-xl">
-            Yarn Yapper
-          </span>
+        
+        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-['Playfair_Display'] text-[#2b2824] leading-[1.1] mb-6 tracking-tight">
+          Handcrafted <br />
+          <span className="italic text-[#6e655a]">with Love & Yarn</span>
         </h1>
-
-        {/* Underline */}
-        <div className="flex justify-center mb-10">
-          <div className="h-1 w-40 bg-gradient-to-r from-[#c4a484] via-[#a67c52] to-[#8b5e34] rounded-full"></div>
-        </div>
-
-        {/* Tagline */}
-        <p className="text-lg sm:text-xl md:text-2xl italic font-light max-w-3xl mx-auto mb-14 animate-fadeInUp animation-delay-300">
-          Where every stitch tells a story
+        
+        <p className="text-[#6e655a] text-lg sm:text-lg font-medium max-w-lg mb-10 leading-relaxed">
+          Discover a curated collection of beautiful, sustainable yarn art designed to bring warmth, color, and elegance to your space.
         </p>
-
-        {/* CTA Button */}
-        <div className="animate-fadeInUp animation-delay-600">
+        
+        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
           <Link
             to="/shop"
-            className="group relative inline-flex items-center justify-center px-12 py-5 font-semibold rounded-full shadow-2xl overflow-hidden"
+            className="btn-primary flex items-center justify-center gap-2 group w-full sm:w-auto"
           >
-            <span className="absolute inset-0 bg-gradient-to-r from-[#8b5e34] via-[#a67c52] to-[#c4a484] group-hover:scale-110 transition-transform duration-500"></span>
-            <span className="relative text-white text-lg flex items-center gap-2">
-              Explore Shop
-              <svg
-                className="w-5 h-5 group-hover:translate-x-1 transition-transform"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                viewBox="0 0 24 24"
-              >
-                <path d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </span>
+            Explore Collection
+            <svg
+              className="w-5 h-5 group-hover:translate-x-1 transition-transform"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </Link>
+          <Link
+            to="/about"
+            className="btn-outline flex items-center justify-center w-full sm:w-auto"
+          >
+            Our Story
           </Link>
         </div>
       </div>
 
-      {/* Animations */}
+      {/* Image Gallery Area */}
+      <div className="w-full md:w-1/2 flex justify-center md:justify-end relative mt-8 md:mt-0">
+        {/* Soft Decorative Blob Behind Image */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] bg-[#fcedda] rounded-[4rem] mix-blend-multiply filter blur-2xl opacity-70 z-0 rotate-6"></div>
+
+        {/* Main Image */}
+        <div className="relative z-10 w-[85%] md:w-[90%] max-w-md aspect-[4/5] rounded-[2.5rem] overflow-hidden shadow-soft group border-4 border-white">
+          <img 
+            src={yarnHeroImage} 
+            alt="Handcrafted Yarn Art" 
+            className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#2b2824]/10 to-transparent pointer-events-none"></div>
+        </div>
+
+        {/* Floating Accent Badge */}
+        <div className="absolute bottom-6 -left-2 md:-left-8 z-20 bg-white/95 backdrop-blur-md px-5 py-4 rounded-2xl shadow-soft border border-[#e6dfce] flex items-center gap-4 animate-bounce-slow">
+           <div className="w-12 h-12 bg-[#cce3de] rounded-full flex items-center justify-center text-[#2b2824] font-['Playfair_Display'] font-bold text-xl shadow-sm">
+             100%
+           </div>
+           <div>
+             <p className="text-[#2b2824] font-bold text-sm">Premium Quality</p>
+             <p className="text-[#6e655a] text-xs font-medium">Sustainable Materials</p>
+           </div>
+        </div>
+      </div>
+
       <style jsx>{`
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
+        @keyframes bounce-slow {
+          0%, 100% {
             transform: translateY(0);
           }
+          50% {
+            transform: translateY(-8px);
+          }
         }
-
-        .animate-fadeInUp {
-          animation: fadeInUp 1s ease-out forwards;
-          opacity: 0;
-        }
-
-        .animation-delay-300 {
-          animation-delay: 0.3s;
-        }
-
-        .animation-delay-600 {
-          animation-delay: 0.6s;
+        .animate-bounce-slow {
+          animation: bounce-slow 4s ease-in-out infinite;
         }
       `}</style>
     </section>

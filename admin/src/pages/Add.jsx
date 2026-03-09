@@ -65,10 +65,10 @@ const Add = () => {
     <div className="w-full flex justify-center px-4 py-6">
       <form
         onSubmit={submitHandler}
-        className="bg-white w-full max-w-3xl p-6 md:p-8 rounded-xl shadow"
+        className="bg-white/80 backdrop-blur-sm w-full max-w-3xl p-8 md:p-10 rounded-3xl shadow-soft border border-[#e6dfce]"
       >
-        <h2 className="text-2xl font-semibold mb-6 text-gray-800">
-          Add New Product
+        <h2 className="text-3xl font-bold font-['Playfair_Display'] mb-8 text-[#2b2824] flex items-center gap-2">
+           <span className="text-[#cce3de] text-2xl">◆</span> Add New Product
         </h2>
 
         {/* IMAGES */}
@@ -79,12 +79,12 @@ const Add = () => {
             {images.map((img, i) => (
               <label
                 key={i}
-                className="cursor-pointer flex items-center justify-center"
+                className="cursor-pointer flex items-center justify-center group"
               >
                 <img
                   src={img ? URL.createObjectURL(img) : assets.upload_area}
                   alt={`Upload ${i + 1}`}
-                  className="w-24 h-24 sm:w-28 sm:h-28 border-2 border-dashed border-gray-300 rounded-lg object-cover hover:border-blue-400 transition"
+                  className="w-24 h-24 sm:w-28 sm:h-28 border-2 border-dashed border-[#e6dfce] bg-white/50 rounded-2xl object-cover group-hover:border-[#cce3de] group-hover:shadow-sm transition-all"
                 />
                 <input
                   type="file"
@@ -102,12 +102,12 @@ const Add = () => {
         </div>
 
         {/* NAME */}
-        <div className="mb-4">
-          <label className="block mb-2 font-medium">
-            Product Name *
+        <div className="mb-5">
+          <label className="block mb-2 font-bold text-[#2b2824] px-1">
+            Product Name <span className="text-[#f4c2c2]">*</span>
           </label>
           <input
-            className="border w-full p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full px-5 py-4 border-2 border-[#e6dfce] bg-white/50 rounded-xl focus:outline-none focus:border-[#cce3de] transition-colors"
             placeholder="Enter product name"
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -116,12 +116,12 @@ const Add = () => {
         </div>
 
         {/* DESCRIPTION */}
-        <div className="mb-4">
-          <label className="block mb-2 font-medium">
-            Description *
+        <div className="mb-5">
+          <label className="block mb-2 font-bold text-[#2b2824] px-1">
+            Description <span className="text-[#f4c2c2]">*</span>
           </label>
           <textarea
-            className="border w-full p-3 rounded-lg h-28 resize-none focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="w-full px-5 py-4 border-2 border-[#e6dfce] bg-white/50 rounded-xl focus:outline-none focus:border-[#cce3de] transition-colors h-32 resize-none"
             placeholder="Enter product description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -130,13 +130,13 @@ const Add = () => {
         </div>
 
         {/* PRICE + CATEGORY */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-8">
           <div>
-            <label className="block mb-2 font-medium">
-              Price (₹) *
+            <label className="block mb-2 font-bold text-[#2b2824] px-1">
+              Price (₹) <span className="text-[#f4c2c2]">*</span>
             </label>
             <input
-              className="border w-full p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full px-5 py-4 border-2 border-[#e6dfce] bg-white/50 rounded-xl focus:outline-none focus:border-[#cce3de] transition-colors"
               placeholder="Enter price"
               type="number"
               min="0"
@@ -147,11 +147,11 @@ const Add = () => {
           </div>
 
           <div>
-            <label className="block mb-2 font-medium">
+            <label className="block mb-2 font-bold text-[#2b2824] px-1">
               Category
             </label>
             <select
-              className="border w-full p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full px-5 py-4 border-2 border-[#e6dfce] bg-white/50 rounded-xl focus:outline-none focus:border-[#cce3de] transition-colors appearance-none cursor-pointer"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
             >
@@ -167,7 +167,11 @@ const Add = () => {
         <button
           type="submit"
           disabled={loading}
-          className="w-full sm:w-auto bg-blue-600 text-white px-10 py-3 rounded-lg hover:bg-blue-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed font-medium"
+          className={`w-full py-4 rounded-full font-bold text-lg text-[#2b2824] transition-all shadow-soft border-2 mt-2 ${
+            loading
+              ? "bg-[#e2d4e0] border-[#e2d4e0] cursor-not-allowed"
+              : "bg-[#cce3de] border-[#cce3de] hover:bg-[#b0d4cc] hover:border-[#b0d4cc] hover:-translate-y-1 hover:shadow-soft-hover"
+          }`}
         >
           {loading ? "Adding Product..." : "Add Product"}
         </button>

@@ -13,6 +13,7 @@ import ShopContextProvider from './context/ShopContext'
 import yarnHeroImage from './assets/yarn-hero.jpg' // Add your yarn background image
 import About from './pages/About'
 import Contact from './pages/Contact'
+import Wishlist from './pages/Wishlist'
 
 const App = () => {
   const location = useLocation();
@@ -49,6 +50,7 @@ const App = () => {
             <Route path="/placeorder" element={<Placeorder />} />
             <Route path="/product/:id" element={<Product />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/wishlist" element={<Wishlist />} />
           </Routes>
         </div>
         

@@ -56,21 +56,28 @@ const ReviewModal = ({ product, onClose, onReviewSubmit }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn">
-      <div className="relative bg-[#faf8f4] w-full max-w-2xl rounded-3xl shadow-2xl max-h-[90vh] overflow-y-auto animate-slideUp">
+    <div 
+      className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn"
+      onClick={onClose}
+    >
+      <div 
+        className="relative bg-[#faf8f4] w-full max-w-2xl rounded-3xl shadow-2xl max-h-[90vh] overflow-y-auto animate-slideUp"
+        onClick={(e) => e.stopPropagation()}
+      >
 
         {/* Soft linen header glow */}
-        <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-br from-[#e9e4da] to-transparent rounded-t-3xl"></div>
+        <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-br from-[#e9e4da] to-transparent rounded-t-3xl pointer-events-none"></div>
 
         {/* Close */}
         <button
+          type="button"
           onClick={onClose}
-          className="absolute top-5 right-5 w-10 h-10 rounded-full bg-white hover:bg-[#f3efe8] shadow flex items-center justify-center text-[#6b5e4b] transition"
+          className="absolute top-5 right-5 w-10 h-10 rounded-full bg-white hover:bg-[#f3efe8] shadow flex items-center justify-center text-[#6b5e4b] transition z-50 cursor-pointer"
         >
           ✕
         </button>
 
-        <div className="p-8 relative">
+        <div className="p-8 relative z-10">
 
           {/* Title */}
           <div className="text-center mb-6">

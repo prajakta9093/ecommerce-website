@@ -36,15 +36,18 @@ const Login = ({ setToken }) => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-blue-50 to-indigo-100">
-      
-      <div className="bg-white w-full max-w-md p-6 sm:p-8 rounded-2xl shadow-xl">
+    <div className="min-h-screen flex items-center justify-center px-4 bg-[#faf7f2] relative overflow-hidden">
+       {/* Background Accents */}
+       <div className="absolute top-10 left-10 w-[400px] h-[400px] bg-[#f4c2c2] rounded-full blur-[100px] opacity-30 mix-blend-multiply pointer-events-none"></div>
+       <div className="absolute bottom-10 right-10 w-[400px] h-[400px] bg-[#cce3de] rounded-full blur-[100px] opacity-40 mix-blend-multiply pointer-events-none"></div>
+
+      <div className="bg-white/90 backdrop-blur-sm w-full max-w-md p-8 sm:p-10 rounded-3xl shadow-soft border border-[#e6dfce] relative z-10">
         
         {/* Header */}
-        <div className="text-center mb-6">
-          <div className="bg-blue-100 w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-3">
+        <div className="text-center mb-8">
+          <div className="bg-[#fcedda] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm border border-white">
             <svg
-              className="w-7 h-7 sm:w-8 sm:h-8 text-blue-600"
+              className="w-8 h-8 text-[#2b2824]"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -58,11 +61,11 @@ const Login = ({ setToken }) => {
             </svg>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">
-            Admin Panel
+          <h1 className="text-3xl font-['Playfair_Display'] font-bold text-[#2b2824]">
+            Store Admin
           </h1>
-          <p className="text-sm sm:text-base text-gray-600 mt-1">
-            Sign in to manage your store
+          <p className="text-base font-medium text-[#6e655a] mt-2">
+            Sign in to manage YarnYapper
           </p>
         </div>
 
@@ -74,22 +77,22 @@ const Login = ({ setToken }) => {
         )}
 
         {/* Form */}
-        <div className="space-y-4">
+        <div className="space-y-5">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-bold text-[#2b2824] mb-2 px-1">
               Email Address
             </label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              className="w-full px-5 py-4 border-2 border-[#e6dfce] bg-white/50 rounded-xl focus:outline-none focus:border-[#cce3de] transition-colors"
               placeholder="admin@example.com"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-bold text-[#2b2824] mb-2 px-1">
               Password
             </label>
             <input
@@ -97,7 +100,7 @@ const Login = ({ setToken }) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleLogin(e)}
-              className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+              className="w-full px-5 py-4 border-2 border-[#e6dfce] bg-white/50 rounded-xl focus:outline-none focus:border-[#cce3de] transition-colors"
               placeholder="••••••••"
             />
           </div>
@@ -105,17 +108,25 @@ const Login = ({ setToken }) => {
           <button
             onClick={handleLogin}
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition disabled:bg-gray-400"
+            className={`w-full py-4 rounded-full font-bold text-lg text-[#2b2824] transition-all shadow-soft mt-6 border-2 ${
+              loading
+                ? "bg-[#e2d4e0] border-[#e2d4e0]"
+                : "bg-[#cce3de] border-[#cce3de] hover:bg-[#b0d4cc] hover:border-[#b0d4cc] hover:-translate-y-1"
+            }`}
           >
             {loading ? "Logging in..." : "Sign In"}
           </button>
         </div>
 
         {/* Demo credentials */}
-        <div className="mt-6 p-3 bg-gray-50 rounded-lg border text-xs sm:text-sm">
-          <p className="font-semibold text-gray-700 mb-1">Demo Credentials</p>
-          <p>Email: vid@gmail.com</p>
-          <p>Password: 12345678</p>
+        <div className="mt-8 p-5 bg-[#faf7f2] rounded-2xl border border-[#e6dfce] text-sm font-medium text-[#6e655a]">
+          <p className="font-bold text-[#2b2824] mb-2 flex items-center gap-2">
+            <span className="text-[#f4c2c2] text-lg">◆</span> Demo Credentials
+          </p>
+          <div className="space-y-1 ml-5">
+            <p>Email: vid@gmail.com</p>
+            <p>Password: 12345678</p>
+          </div>
         </div>
 
       </div>

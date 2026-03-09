@@ -116,4 +116,69 @@ const singleProduct = async (req, res) => {
   }
 };
 
-export { addProduct, listProducts, removeProduct, singleProduct };
+/* =========================
+   UPDATE PRODUCT
+========================= */
+const updateProduct = async (req, res) => {
+  try {
+    const { id, name, description, price, category } = req.body;
+
+    if (!id) {
+      return res.json({ success: false, message: "Product ID is required" });
+    }
+
+    const product = await productModel.findById(id);
+
+    if (!product) {
+      return res.json({ success: false, message: "Product not found" });
+    }
+
+    // 1. Process new images if any are uploaded
+    let newImages = [];
+    const imageFields = ["image1", "image2", "image3", "image4"];
+
+    for (const field of imageFields) {
+      if (req.files?.[field]) {
+        const filePath = req.files[field][0].path;
+
+        const result = await cloudinary.uploader.upload(filePath, {
+          folder: "products",
+        });
+
+        newImages.push(result.secure_url);
+      }
+    }
+
+    // 2. If new images were uploaded, replace old ones on Cloudinary
+    if (newImages.length > 0) {
+      for (const img of product.images) {
+        try {
+          const publicId = img.split("/").pop().split(".")[0];
+          await cloudinary.uploader.destroy(`products/${publicId}`);
+        } catch (err) {
+          console.error("Error deleting old image:", err);
+        }
+      }
+      product.images = newImages;
+    }
+
+    // 3. Update other fields
+    if (name) product.name = name;
+    if (description) product.description = description;
+    if (price) product.price = price;
+    if (category) product.category = category;
+
+    await product.save();
+
+    res.json({
+      success: true,
+      message: "Product updated successfully",
+      product,
+    });
+  } catch (error) {
+    console.error("❌ Update product error:", error);
+    res.json({ success: false, message: "Server error during update" });
+  }
+};
+
+export { addProduct, listProducts, removeProduct, singleProduct, updateProduct };

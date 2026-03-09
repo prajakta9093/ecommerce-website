@@ -2,10 +2,9 @@ import React, { useState } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { MessageCircle, Mail } from "lucide-react";
 
 const backendUrl = import.meta.env.VITE_BACKENDURL;
-
-// 🔴 Replace with your WhatsApp number (country code + number, no +)
 const WHATSAPP_NUMBER = "917620874930";
 
 const Customorder = () => {
@@ -49,13 +48,13 @@ const Customorder = () => {
   };
 
   const buildMessage = () => `
-New Custom Order 🧵
+New Custom Order Request 🎨
 
 Name: ${formData.firstName} ${formData.lastName}
 Email: ${formData.email}
 Phone: ${formData.phone}
 
-Message:
+Details:
 ${formData.message}
   `;
 
@@ -86,11 +85,11 @@ ${formData.message}
       );
 
       if (!res.data.success) {
-        alert("❌ Failed to submit order");
+        alert("Failed to submit inquiry. Please try again.");
         return;
       }
 
-      alert("🤎 Custom order submitted successfully!");
+      alert("Thank you! Your custom order request has been received.");
       openContactApp();
 
       setFormData({
@@ -102,97 +101,142 @@ ${formData.message}
         contactMethod: "Whatsapp",
       });
     } catch {
-      alert("❌ Server error. Try again.");
+      alert("Server error. Please try again later.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#faf8f4]">
+    <div className="flex flex-col min-h-screen bg-[#fdfbf7]">
       <Navbar />
 
-      <div className="pt-24 pb-16 px-4">
+      <main className="flex-grow pt-32 pb-24 px-6 md:px-12">
         <div className="max-w-3xl mx-auto">
 
           {/* Header */}
-          <div className="text-center mb-14">
-      
-            <h1 className="text-5xl font-bold text-[#4a3b2a] mb-4">
+          <div className="text-center mb-16">
+            <h1 className="text-4xl md:text-5xl font-['Playfair_Display'] font-semibold text-[#3f3a34] mb-4">
               Bring Your Vision to Life
             </h1>
-            <p className="text-lg text-[#6b5a44]">
-              Thoughtfully handmade, just for you
+            <p className="text-lg text-[#7a6f63] font-medium max-w-xl mx-auto">
+              Looking for something completely unique? Let's collaborate to create a bespoke, handmade piece just for you.
             </p>
           </div>
 
-          {/* Form Only */}
-          <div className="bg-white rounded-3xl shadow-2xl p-10">
-            <h2 className="text-3xl font-bold text-[#4a3b2a] mb-8 text-center">
-              Tell Us Your Idea
-            </h2>
+          {/* Form */}
+          <div className="bg-white rounded-3xl shadow-soft p-8 sm:p-12 border border-[#f5f0eb]">
+            <form onSubmit={handleSubmit} className="space-y-8">
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-
-              {/* Contact Method */}
+              {/* Contact Method Navigation */}
               <div>
-                <label className="block mb-3 font-semibold text-[#6b5a44]">
-                  Preferred Contact Method
-                </label>
-                <div className="flex gap-4">
-                  {["Whatsapp", "Email"].map((method) => (
+                <h3 className="text-sm font-semibold text-[#7a6f63] mb-4 px-1">How should we reach you?</h3>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  {[
+                     { id: "Whatsapp", icon: MessageCircle, label: "WhatsApp" },
+                     { id: "Email", icon: Mail, label: "Email" }
+                  ].map((method) => (
                     <button
                       type="button"
-                      key={method}
-                      onClick={() =>
-                        setFormData({ ...formData, contactMethod: method })
-                      }
-                      className={`flex-1 py-3 rounded-xl border-2 font-semibold transition-all
+                      key={method.id}
+                      onClick={() => setFormData({ ...formData, contactMethod: method.id })}
+                      className={`flex-1 flex items-center justify-center gap-3 py-4 rounded-xl border transition-all text-sm font-semibold
                         ${
-                          formData.contactMethod === method
-                            ? "bg-[#8b6f4e] text-white border-[#8b6f4e]"
-                            : "border-[#cbb59a] text-[#6b5a44]"
+                          formData.contactMethod === method.id
+                            ? "bg-[#e8d5cc] border-[#e8d5cc] text-[#3f3a34] shadow-sm"
+                            : "bg-[#fdfbf7] border-[#f0ede6] text-[#7a6f63] hover:border-[#e8d5cc] hover:bg-white"
                         }`}
                     >
-                      {method === "Whatsapp" ? "💬 WhatsApp" : "✉️ Email"}
+                      <method.icon size={18} />
+                      {method.label}
                     </button>
                   ))}
                 </div>
               </div>
 
-              {["firstName", "lastName", "email", "phone"].map((field) => (
-                <input
-                  key={field}
-                  name={field}
-                  value={formData[field]}
+              {/* Inputs */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-semibold text-[#7a6f63] mb-2 px-1">First Name</label>
+                  <input
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    placeholder="Jane"
+                    className="w-full px-5 py-4 bg-[#fdfbf7] border border-[#f0ede6] rounded-xl focus:outline-none focus:border-[#e8d5cc] focus:ring-2 focus:ring-[#e8d5cc]/20 transition-all text-[#3f3a34] placeholder:text-[#a39a90]"
+                  />
+                  {errors.firstName && <span className="text-xs text-red-500 mt-1 ml-1">{errors.firstName}</span>}
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-[#7a6f63] mb-2 px-1">Last Name</label>
+                  <input
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    placeholder="Doe"
+                    className="w-full px-5 py-4 bg-[#fdfbf7] border border-[#f0ede6] rounded-xl focus:outline-none focus:border-[#e8d5cc] focus:ring-2 focus:ring-[#e8d5cc]/20 transition-all text-[#3f3a34] placeholder:text-[#a39a90]"
+                  />
+                  {errors.lastName && <span className="text-xs text-red-500 mt-1 ml-1">{errors.lastName}</span>}
+                </div>
+                <div>
+                   <label className="block text-sm font-semibold text-[#7a6f63] mb-2 px-1">Email Address</label>
+                  <input
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="jane@example.com"
+                    className="w-full px-5 py-4 bg-[#fdfbf7] border border-[#f0ede6] rounded-xl focus:outline-none focus:border-[#e8d5cc] focus:ring-2 focus:ring-[#e8d5cc]/20 transition-all text-[#3f3a34] placeholder:text-[#a39a90]"
+                  />
+                  {errors.email && <span className="text-xs text-red-500 mt-1 ml-1">{errors.email}</span>}
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-[#7a6f63] mb-2 px-1">Phone Number</label>
+                  <input
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    placeholder="10 digit number"
+                    className="w-full px-5 py-4 bg-[#fdfbf7] border border-[#f0ede6] rounded-xl focus:outline-none focus:border-[#e8d5cc] focus:ring-2 focus:ring-[#e8d5cc]/20 transition-all text-[#3f3a34] placeholder:text-[#a39a90]"
+                  />
+                  {errors.phone && <span className="text-xs text-red-500 mt-1 ml-1">{errors.phone}</span>}
+                </div>
+              </div>
+
+               <div>
+                 <label className="block text-sm font-semibold text-[#7a6f63] mb-2 px-1">Your Idea</label>
+                <textarea
+                  name="message"
+                  value={formData.message}
                   onChange={handleChange}
-                  placeholder={field.replace(/([A-Z])/g, " $1")}
-                  className="w-full px-5 py-4 rounded-xl border-2 border-[#cbb59a] focus:outline-none focus:border-[#8b6f4e]"
+                  rows="5"
+                  placeholder="Tell us about the piece you have in mind (colors, textures, sizing, inspiration)..."
+                  className="w-full px-5 py-4 bg-[#fdfbf7] border border-[#f0ede6] rounded-xl focus:outline-none focus:border-[#e8d5cc] focus:ring-2 focus:ring-[#e8d5cc]/20 transition-all text-[#3f3a34] placeholder:text-[#a39a90] resize-y"
                 />
-              ))}
+                {errors.message && <span className="text-xs text-red-500 mt-1 ml-1">{errors.message}</span>}
+              </div>
 
-              <textarea
-                name="message"
-                value={formData.message}
-                onChange={handleChange}
-                rows="5"
-                placeholder="Describe your custom order..."
-                className="w-full px-5 py-4 rounded-xl border-2 border-[#cbb59a] resize-none focus:outline-none focus:border-[#8b6f4e]"
-              />
+              <div className="pt-4">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className={`w-full py-4 rounded-xl font-medium text-lg transition-all shadow-soft text-[#3f3a34] ${
+                    loading 
+                      ? "bg-[#dce2d6] opacity-70 cursor-not-allowed shadow-none" 
+                      : "bg-[#e8d5cc] hover:bg-[#d8c3b9] hover:shadow-soft-hover"
+                  }`}
+                >
+                  {loading ? "Sending Inquiry..." : "Submit Inquiry"}
+                </button>
+                <p className="text-center text-xs text-[#a39a90] mt-4 font-medium">
+                  We'll review your request and get back to you within 24-48 hours.
+                </p>
+              </div>
 
-              <button
-                type="submit"
-                disabled={loading}
-                className={`w-full bg-[#8b6f4e] text-white py-4 rounded-2xl font-bold transition-all
-                  ${loading ? "opacity-50" : "hover:scale-105"}`}
-              >
-                {loading ? "Submitting..." : "Submit Custom Order"}
-              </button>
             </form>
           </div>
 
         </div>
-      </div>
+      </main>
 
       <Footer />
     </div>

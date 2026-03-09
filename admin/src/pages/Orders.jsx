@@ -116,114 +116,121 @@ const Orders = ({ onLogout }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-3 sm:p-6">
-      <div className="max-w-7xl mx-auto">
-        <h1 className="text-xl sm:text-3xl font-bold mb-4 sm:mb-6">
-          Admin Orders Dashboard
+    <div className="p-3 sm:p-6 max-w-7xl mx-auto">
+      <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <h1 className="text-2xl sm:text-3xl font-bold font-['Playfair_Display'] text-[#2b2824] flex items-center gap-2">
+           <span className="text-[#cce3de] text-2xl">◆</span> Admin Orders Dashboard
         </h1>
+      </div>
 
-        {/* Filters */}
-        <div className="flex gap-2 mb-4 sm:mb-6 overflow-x-auto pb-2">
-          {filterCategories.map((category) => (
-            <button
-              key={category}
-              onClick={() => setActiveFilter(category)}
-              className={`px-4 py-2 rounded-lg text-sm sm:text-base font-semibold whitespace-nowrap ${
-                activeFilter === category
-                  ? "bg-blue-600 text-white"
-                  : "bg-white text-gray-700"
-              }`}
-            >
-              {category} ({getStatusCount(category)})
-            </button>
-          ))}
-        </div>
+      {/* Filters */}
+      <div className="flex gap-3 mb-8 overflow-x-auto pb-2 scrollbar-hide">
+        {filterCategories.map((category) => (
+          <button
+            key={category}
+            onClick={() => setActiveFilter(category)}
+            className={`px-6 py-3 rounded-full text-sm font-bold whitespace-nowrap transition-all shadow-sm border ${
+              activeFilter === category
+                ? "bg-[#2b2824] text-white border-[#2b2824]"
+                : "bg-white text-[#6e655a] border-[#e6dfce] hover:border-[#cce3de] hover:bg-[#faf7f2]"
+            }`}
+          >
+            {category} <span className={`ml-2 px-2 py-0.5 rounded-full text-xs ${activeFilter === category ? "bg-white/20" : "bg-[#fcedda] text-[#2b2824]"}`}>{getStatusCount(category)}</span>
+          </button>
+        ))}
+      </div>
 
         {/* Orders */}
         {filteredOrders.length === 0 ? (
-          <div className="bg-white p-4 sm:p-6 rounded shadow text-center">
+          <div className="bg-white/80 backdrop-blur-sm p-12 rounded-3xl shadow-soft border border-[#e6dfce] text-center text-[#6e655a] font-medium text-lg">
             No orders found
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-6">
             {filteredOrders.map((order) => (
               <div
                 key={order._id}
-                className="bg-white border p-4 sm:p-6 rounded-lg shadow-sm"
+                className="bg-white/80 backdrop-blur-sm border border-[#e6dfce] p-6 sm:p-8 rounded-3xl shadow-soft group hover:border-white transition-all"
               >
                 {/* Top info */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                   <div>
-                    <p className="text-xs sm:text-sm text-gray-500">Order ID</p>
-                    <p className="font-mono text-xs sm:text-sm break-all">
+                    <p className="text-xs font-bold uppercase tracking-widest text-[#6e655a] mb-1">Order ID</p>
+                    <p className="font-mono text-sm font-bold text-[#2b2824] break-all bg-[#faf7f2] px-3 py-1.5 rounded-lg border border-[#e6dfce] inline-block shadow-sm">
                       {order._id}
                     </p>
                   </div>
 
                   <div>
-                    <p className="text-xs sm:text-sm text-gray-500">Customer</p>
-                    <p className="font-medium text-sm">
+                    <p className="text-xs font-bold uppercase tracking-widest text-[#6e655a] mb-1">Customer</p>
+                    <p className="font-bold text-[#2b2824] text-base mb-0.5">
                       {order.shippingAddress
                         ? `${order.shippingAddress.firstName} ${order.shippingAddress.lastName}`
                         : order.userId?.email || "N/A"}
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-sm font-medium text-[#6e655a]">
                       {order.shippingAddress?.email}
                     </p>
                   </div>
 
-                  <div>
-                    <p className="text-xs sm:text-sm text-gray-500">Total</p>
-                    <p className="font-bold text-green-600">
+                  <div className="bg-[#fcedda]/50 px-4 py-3 rounded-xl border border-[#e6dfce]">
+                    <p className="text-xs font-bold uppercase tracking-widest text-[#6e655a] mb-1">Total Amount</p>
+                    <p className="font-bold text-2xl text-[#2b2824]">
                       ₹{order.totalAmount}
                     </p>
                   </div>
 
                   <div>
-                    <p className="text-xs sm:text-sm text-gray-500">Date</p>
-                    <p className="text-sm">
+                    <p className="text-xs font-bold uppercase tracking-widest text-[#6e655a] mb-1">Date</p>
+                    <p className="text-sm font-bold text-[#2b2824]">
                       {order.createdAt
-                        ? new Date(order.createdAt).toLocaleDateString()
+                        ? new Date(order.createdAt).toLocaleDateString("en-IN", { dateStyle: "long" })
                         : "N/A"}
                     </p>
                   </div>
                 </div>
 
                 {/* Payment */}
-                <div className="flex flex-wrap gap-2 sm:gap-4 mb-4">
-                  <span className="px-3 py-1 rounded-full text-xs sm:text-sm bg-gray-100">
+                <div className="flex flex-wrap gap-3 mb-6">
+                  <span className="px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold border border-[#e6dfce] bg-white text-[#2b2824] shadow-sm">
                     💳 {order.paymentMethod}
                   </span>
 
                   <span
-                    className={`px-3 py-1 rounded-full text-xs sm:text-sm ${getPaymentBadge(
-                      order.paymentStatus
-                    )}`}
+                    className={`px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold border shadow-sm ${
+                      order.paymentStatus === "Paid" 
+                        ? "bg-[#cce3de] text-[#2b2824] border-[#cce3de]/50" 
+                        : "bg-[#fcedda] text-[#2b2824] border-[#fcedda]/50"
+                    }`}
                   >
                     {order.paymentStatus}
                   </span>
                 </div>
 
                 {/* Items */}
-                <div className="bg-gray-50 p-3 rounded mb-4">
+                <div className="bg-[#faf7f2] p-5 rounded-2xl mb-6 border border-[#e6dfce] space-y-2">
+                  <p className="text-xs font-bold uppercase tracking-widest text-[#6e655a] mb-3">Order Items</p>
                   {order.items.map((item, i) => (
-                    <p key={i} className="text-xs sm:text-sm">
-                      • {item.name} × {item.quantity} — ₹{item.price}
-                    </p>
+                    <div key={i} className="flex justify-between items-center bg-white px-4 py-3 rounded-xl border border-[#e6dfce] shadow-sm">
+                      <p className="text-sm font-bold text-[#2b2824]">
+                        {item.name} <span className="text-[#6e655a] font-medium mx-2">×</span> {item.quantity}
+                      </p>
+                      <p className="font-bold text-[#2b2824]">₹{item.price}</p>
+                    </div>
                   ))}
                 </div>
 
                 {/* Status */}
-                <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                  <label className="text-xs sm:text-sm text-gray-500">
-                    Order Status:
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 pt-4 border-t border-[#e6dfce] mt-6">
+                  <label className="text-xs font-bold uppercase tracking-widest text-[#6e655a]">
+                    Update Status
                   </label>
                   <select
                     value={order.orderStatus}
                     onChange={(e) =>
                       updateStatus(order._id, e.target.value)
                     }
-                    className="border p-2 rounded w-full sm:w-auto text-sm"
+                    className="border-2 border-[#e6dfce] bg-white text-[#2b2824] font-bold px-4 py-2.5 rounded-xl w-full sm:w-auto text-sm focus:outline-none focus:border-[#cce3de] transition-colors cursor-pointer shadow-sm appearance-none"
                   >
                     <option value="Processing">Processing</option>
                     <option value="Shipped">Shipped</option>
@@ -236,7 +243,6 @@ const Orders = ({ onLogout }) => {
           </div>
         )}
       </div>
-    </div>
   );
 };
 

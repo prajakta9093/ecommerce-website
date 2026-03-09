@@ -71,90 +71,90 @@ const CustomOrders = () => {
     );
 
   return (
-    <div className="min-h-screen bg-gray-50 px-3 sm:px-6 py-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
-          <h1 className="text-2xl sm:text-3xl font-bold">Custom Orders</h1>
-          <span className="text-xs sm:text-sm text-gray-500 bg-white border px-3 py-1 rounded-full shadow-sm w-fit">
-            {orders.length} {orders.length === 1 ? "Order" : "Orders"}
-          </span>
+    <div className="p-3 sm:p-6 max-w-7xl mx-auto">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold font-['Playfair_Display'] text-[#2b2824] flex items-center gap-2">
+           <span className="text-[#f4c2c2] text-2xl">◆</span> Custom Orders
+        </h1>
+        <span className="text-sm font-bold text-[#2b2824] bg-white border border-[#e6dfce] px-4 py-2 rounded-full shadow-sm w-fit">
+          {orders.length} {orders.length === 1 ? "Request" : "Requests"}
+        </span>
+      </div>
+
+      {orders.length === 0 ? (
+        <div className="bg-white/80 backdrop-blur-sm p-12 rounded-3xl shadow-soft border border-[#e6dfce] text-center text-[#6e655a] font-medium text-lg">
+          No custom orders yet
         </div>
-
-        {orders.length === 0 ? (
-          <div className="bg-white p-4 sm:p-6 rounded shadow text-center text-gray-500">
-            No custom orders yet
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {orders.map((order) => (
-              <div
-                key={order._id}
-                className="bg-white border p-4 sm:p-6 rounded-lg shadow-sm"
-              >
-                {/* Info Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                  <div>
-                    <p className="text-xs text-gray-500">Customer</p>
-                    <p className="font-medium text-sm">
-                      {order.firstName} {order.lastName}
-                    </p>
-                  </div>
-
-                  <div>
-                    <p className="text-xs text-gray-500">Email</p>
-                    <p className="text-sm break-all">{order.email}</p>
-                  </div>
-
-                  <div>
-                    <p className="text-xs text-gray-500">Phone</p>
-                    <p className="text-sm">{order.phone}</p>
-                  </div>
-
-                  <div>
-                    <p className="text-xs text-gray-500">Date</p>
-                    <p className="text-sm">
-                      {order.createdAt
-                        ? new Date(order.createdAt).toLocaleDateString()
-                        : "N/A"}
-                    </p>
-                  </div>
+      ) : (
+        <div className="space-y-6">
+          {orders.map((order) => (
+            <div
+              key={order._id}
+              className="bg-white/80 backdrop-blur-sm border border-[#e6dfce] p-6 sm:p-8 rounded-3xl shadow-soft group hover:border-white transition-all"
+            >
+              {/* Info Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-widest text-[#6e655a] mb-1">Customer</p>
+                  <p className="font-bold text-[#2b2824] text-base">
+                    {order.firstName} {order.lastName}
+                  </p>
                 </div>
 
-                {/* Contact Method */}
-                <div className="flex flex-wrap gap-3 mb-4">
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs sm:text-sm ${
-                      order.contactMethod === "Whatsapp"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-blue-100 text-blue-700"
-                    }`}
-                  >
-                    {order.contactMethod === "Whatsapp" ? "📱" : "📧"}{" "}
-                    {order.contactMethod}
-                  </span>
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-widest text-[#6e655a] mb-1">Email</p>
+                  <p className="font-medium text-[#2b2824] text-sm break-all">{order.email}</p>
                 </div>
 
-                {/* Message */}
-                <div className="bg-gray-50 p-3 rounded mb-4">
-                  <p className="text-xs text-gray-500 mb-1">Order Details</p>
-                  <p className="text-sm break-words">{order.message}</p>
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-widest text-[#6e655a] mb-1">Phone</p>
+                  <p className="font-bold text-[#2b2824] text-sm">{order.phone}</p>
                 </div>
 
-                {/* Delete */}
-                <div className="flex justify-end">
-                  <button
-                    onClick={() => deleteOrder(order._id)}
-                    className="bg-red-600 hover:bg-red-700 text-white text-sm px-4 py-2 rounded transition w-full sm:w-auto"
-                  >
-                    Delete Order
-                  </button>
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-widest text-[#6e655a] mb-1">Date</p>
+                  <p className="font-medium text-[#2b2824] text-sm">
+                    {order.createdAt
+                      ? new Date(order.createdAt).toLocaleDateString("en-IN", { dateStyle: "long" })
+                      : "N/A"}
+                  </p>
                 </div>
               </div>
-            ))}
-          </div>
-        )}
-      </div>
+
+              {/* Contact Method */}
+              <div className="flex flex-wrap gap-3 mb-6">
+                <span
+                  className={`px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold shadow-sm border ${
+                    order.contactMethod === "Whatsapp"
+                      ? "bg-[#cce3de] text-[#2b2824] border-[#cce3de]/50"
+                      : "bg-[#d6e2e9] text-[#2b2824] border-[#d6e2e9]/50"
+                  }`}
+                >
+                  {order.contactMethod === "Whatsapp" ? "📱" : "📧"}{" "}
+                  {order.contactMethod}
+                </span>
+              </div>
+
+              {/* Message */}
+              <div className="bg-[#faf7f2] p-6 rounded-2xl mb-6 border border-[#e6dfce]">
+                <p className="text-xs font-bold uppercase tracking-widest text-[#6e655a] mb-2">Order Details</p>
+                <p className="text-base text-[#2b2824] font-medium break-words leading-relaxed">{order.message}</p>
+              </div>
+
+              {/* Delete */}
+              <div className="flex justify-end pt-4 border-t border-[#e6dfce] mt-6">
+                <button
+                  onClick={() => deleteOrder(order._id)}
+                  className="border border-[#f8b4b4]/50 bg-white text-[#b35e5e] px-6 py-2.5 rounded-xl hover:bg-[#f8b4b4]/20 hover:border-[#f8b4b4] transition-all shadow-sm font-bold text-sm w-full sm:w-auto"
+                >
+                  Delete Request
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

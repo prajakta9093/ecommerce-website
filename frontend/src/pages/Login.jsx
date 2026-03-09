@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { User } from "lucide-react";
 
 const backendUrl = import.meta.env.VITE_BACKENDURL;
 
@@ -55,43 +57,45 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#faf8f4]">
+    <div className="flex flex-col min-h-screen bg-[#faf7f2]">
       <Navbar />
 
-      <div className="pt-24 pb-16 px-4 flex items-center justify-center min-h-screen">
-        <div className="w-full max-w-md">
+      <main className="flex-grow flex items-center justify-center pt-32 pb-24 px-6 md:px-12 relative overflow-hidden">
+        {/* Soft Background Accents */}
+        <div className="absolute top-1/2 left-0 w-[400px] h-[400px] bg-[#d6e2e9] rounded-full blur-[100px] opacity-40 mix-blend-multiply pointer-events-none -translate-x-1/2 -translate-y-1/2"></div>
+        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#fcedda] rounded-full blur-[100px] opacity-30 mix-blend-multiply pointer-events-none translate-x-1/3 translate-y-1/3"></div>
+
+        <div className="w-full max-w-md relative z-10">
 
           {/* Header */}
-          <div className="text-center mb-8">
-            <div className="inline-block w-20 h-20 bg-[#8b6f4e] rounded-full flex items-center justify-center mb-4 shadow-lg">
-              <svg className="w-10 h-10 text-white" fill="none" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
-                <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
+          <div className="text-center mb-10">
+            <div className="inline-flex items-center justify-center w-20 h-20 bg-white rounded-full mb-6 text-[#d6e2e9] shadow-sm border border-[#e6dfce]">
+               <User size={36} strokeWidth={2.5} className="text-[#2b2824]" />
             </div>
 
-            <h1 className="text-4xl font-bold text-[#3f3a34] mb-2">
+            <h1 className="text-4xl font-['Playfair_Display'] font-bold text-[#2b2824] mb-3">
               {currentState === "Login" ? "Welcome Back" : "Create Account"}
             </h1>
-            <p className="text-[#7a6f63]">
+            <p className="text-[#6e655a] font-medium text-lg">
               {currentState === "Login"
-                ? "Sign in to continue"
-                : "Join our handmade journey"}
+                ? "Sign in to access your curated collection"
+                : "Join our community of craft lovers"}
             </p>
           </div>
 
-          {/* Form */}
-          <div className="bg-white rounded-3xl shadow-xl p-8 md:p-10 border border-[#e6e0d6]">
-            <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Form Card */}
+          <div className="bg-white/80 backdrop-blur-md rounded-[2rem] shadow-sm p-8 sm:p-10 border border-[#e6dfce]">
+            <form onSubmit={handleSubmit} className="space-y-6">
 
               {currentState === "Signup" && (
                 <div>
-                  <label className="block text-sm font-semibold text-[#3f3a34] mb-2">
+                  <label className="block text-sm font-bold text-[#6e655a] mb-2 px-1">
                     Full Name
                   </label>
                   <input
                     type="text"
-                    placeholder="Your name"
-                    className="w-full px-4 py-4 border-2 border-[#e6e0d6] rounded-xl focus:outline-none focus:border-[#8b6f4e] focus:ring-4 focus:ring-[#d8cbb8]"
+                    placeholder="Enter your name"
+                    className="w-full px-5 py-4 bg-white border border-[#e6dfce] rounded-xl focus:outline-none focus:border-[#d6e2e9] focus:ring-4 focus:ring-[#d6e2e9]/20 transition-all text-[#2b2824] placeholder:text-[#a39a90] font-medium shadow-sm"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
@@ -100,13 +104,13 @@ const Login = () => {
               )}
 
               <div>
-                <label className="block text-sm font-semibold text-[#3f3a34] mb-2">
+                <label className="block text-sm font-bold text-[#6e655a] mb-2 px-1">
                   Email Address
                 </label>
                 <input
                   type="email"
-                  placeholder="you@example.com"
-                  className="w-full px-4 py-4 border-2 border-[#e6e0d6] rounded-xl focus:outline-none focus:border-[#8b6f4e] focus:ring-4 focus:ring-[#d8cbb8]"
+                  placeholder="name@example.com"
+                  className="w-full px-5 py-4 bg-white border border-[#e6dfce] rounded-xl focus:outline-none focus:border-[#d6e2e9] focus:ring-4 focus:ring-[#d6e2e9]/20 transition-all text-[#2b2824] placeholder:text-[#a39a90] font-medium shadow-sm"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -114,46 +118,53 @@ const Login = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-[#3f3a34] mb-2">
-                  Password
-                </label>
+                 <div className="flex justify-between items-center mb-2 px-1">
+                    <label className="block text-sm font-bold text-[#6e655a]">
+                      Password
+                    </label>
+                    {currentState === "Login" && (
+                      <button type="button" className="text-xs font-bold text-[#a39a90] hover:text-[#d6e2e9] transition-colors">
+                        Forgot Password?
+                      </button>
+                    )}
+                 </div>
                 <input
                   type="password"
                   placeholder="••••••••"
-                  className="w-full px-4 py-4 border-2 border-[#e6e0d6] rounded-xl focus:outline-none focus:border-[#8b6f4e] focus:ring-4 focus:ring-[#d8cbb8]"
+                  className="w-full px-5 py-4 bg-white border border-[#e6dfce] rounded-xl focus:outline-none focus:border-[#d6e2e9] focus:ring-4 focus:ring-[#d6e2e9]/20 transition-all text-[#2b2824] placeholder:text-[#a39a90] font-medium shadow-sm"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
               </div>
 
-              {/* Button */}
+              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={loading}
-                className={`w-full bg-[#8b6f4e] text-white py-4 rounded-xl font-bold text-lg shadow-md transition-all duration-300 ${
+                className={`w-full py-4 mt-2 rounded-xl font-bold text-lg transition-all shadow-soft border-2 text-[#2b2824] ${
                   loading
-                    ? "opacity-50 cursor-not-allowed"
-                    : "hover:bg-[#755c3f] hover:shadow-xl hover:scale-105"
+                    ? "bg-[#e6dfce] opacity-70 cursor-not-allowed shadow-none border-[#e6dfce]"
+                    : "bg-[#d6e2e9] hover:bg-[#c2d3dd] hover:shadow-soft-hover border-[#d6e2e9] hover:border-[#c2d3dd] hover:-translate-y-0.5"
                 }`}
               >
-                {loading ? "Please wait..." : currentState}
+                {loading ? "Processing..." : currentState}
               </button>
 
-              {/* Toggle */}
-              <div className="text-center pt-4">
-                <p className="text-[#6b6258]">
+              {/* Toggle State */}
+              <div className="text-center pt-2">
+                <p className="text-[#6e655a] font-medium text-sm">
                   {currentState === "Login"
-                    ? "Don't have an account? "
+                    ? "New to our store? "
                     : "Already have an account? "}
                   <button
                     type="button"
                     onClick={() =>
                       setCurrentState(currentState === "Login" ? "Signup" : "Login")
                     }
-                    className="text-[#8b6f4e] font-semibold hover:underline"
+                    className="text-[#2b2824] font-bold hover:text-[#d6e2e9] transition-colors underline decoration-2 underline-offset-4"
                   >
-                    {currentState === "Login" ? "Sign up" : "Log in"}
+                    {currentState === "Login" ? "Create an account" : "Sign in"}
                   </button>
                 </p>
               </div>
@@ -161,11 +172,13 @@ const Login = () => {
             </form>
           </div>
 
-          <p className="mt-8 text-center text-sm text-[#7a6f63]">
-            By continuing, you agree to our Terms & Privacy Policy
+          <p className="mt-8 text-center text-xs text-[#a39a90] font-medium">
+            By continuing, you agree to our <a href="#" className="underline hover:text-[#6e655a]">Terms of Service</a> and <a href="#" className="underline hover:text-[#6e655a]">Privacy Policy</a>.
           </p>
         </div>
-      </div>
+      </main>
+      
+      <Footer />
     </div>
   );
 };

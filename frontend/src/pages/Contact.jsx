@@ -120,30 +120,33 @@ const Contact = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2]">
+    <div className="min-h-screen bg-[#faf7f2]">
       <Navbar />
 
-      <div className="min-h-screen flex items-center justify-center py-12 px-4">
-        <div className="w-full max-w-2xl">
+      <div className="min-h-screen flex items-center justify-center py-12 px-4 mt-20">
+        <div className="w-full max-w-2xl relative">
+          
+          {/* Decorative Blooms */}
+          <div className="absolute -top-10 -left-10 w-40 h-40 bg-[#f4c2c2] blur-[80px] rounded-full opacity-40 mix-blend-multiply pointer-events-none"></div>
+          <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-[#cce3de] blur-[80px] rounded-full opacity-40 mix-blend-multiply pointer-events-none"></div>
 
           {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-4xl md:text-5xl font-bold text-[#5C3A21] mb-3">
+          <div className="text-center mb-10 relative z-10">
+            <h1 className="text-4xl md:text-5xl font-['Playfair_Display'] font-bold text-[#2b2824] mb-4">
               Get in Touch
             </h1>
-            <p className="text-lg text-[#8B5E3C] font-medium">
-              We'd love to hear from you 🤎
+            <p className="text-lg text-[#6e655a] font-medium">
+              We'd love to hear from you
             </p>
-            <div className="w-24 h-1 bg-[#8B5E3C] mx-auto mt-4 rounded-full"></div>
           </div>
 
           {/* Form */}
-          <div className="bg-white rounded-2xl shadow-xl p-8 md:p-10">
+          <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-sm border border-[#e6dfce] p-8 md:p-12 relative z-10">
             <form onSubmit={handleSubmit} className="space-y-6">
 
               {/* First Name */}
               <div>
-                <label className="block text-[#5C3A21] font-medium mb-2">
+                <label className="block text-[#2b2824] font-bold mb-2">
                   Your First Name
                 </label>
                 <input
@@ -152,16 +155,16 @@ const Contact = () => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   placeholder="Enter your first name"
-                  className={`w-full px-4 py-3 rounded-lg border
-                    focus:outline-none focus:ring-2 transition
+                  className={`w-full px-5 py-4 rounded-xl border-2 bg-white/50
+                    focus:outline-none transition-colors
                     ${
                       errors.firstName && touched.firstName
-                        ? "border-red-500 focus:ring-red-300"
-                        : "border-[#EADBC8] focus:ring-[#8B5E3C]"
+                        ? "border-[#f8b4b4] focus:border-[#f8b4b4]"
+                        : "border-[#e6dfce] focus:border-[#cce3de]"
                     }`}
                 />
                 {errors.firstName && touched.firstName && (
-                  <p className="text-red-500 text-sm mt-1">
+                  <p className="text-[#f8b4b4] text-sm mt-2 font-bold">
                     {errors.firstName}
                   </p>
                 )}
@@ -169,7 +172,7 @@ const Contact = () => {
 
               {/* Email */}
               <div>
-                <label className="block text-[#5C3A21] font-medium mb-2">
+                <label className="block text-[#2b2824] font-bold mb-2">
                   Your Email Address
                 </label>
                 <input
@@ -179,16 +182,16 @@ const Contact = () => {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   placeholder="your.email@example.com"
-                  className={`w-full px-4 py-3 rounded-lg border
-                    focus:outline-none focus:ring-2 transition
+                  className={`w-full px-5 py-4 rounded-xl border-2 bg-white/50
+                    focus:outline-none transition-colors
                     ${
                       errors.email && touched.email
-                        ? "border-red-500 focus:ring-red-300"
-                        : "border-[#EADBC8] focus:ring-[#8B5E3C]"
+                        ? "border-[#f8b4b4] focus:border-[#f8b4b4]"
+                        : "border-[#e6dfce] focus:border-[#cce3de]"
                     }`}
                 />
                 {errors.email && touched.email && (
-                  <p className="text-red-500 text-sm mt-1">
+                  <p className="text-[#f8b4b4] text-sm mt-2 font-bold">
                     {errors.email}
                   </p>
                 )}
@@ -196,7 +199,7 @@ const Contact = () => {
 
               {/* Message */}
               <div>
-                <label className="block text-[#5C3A21] font-medium mb-2">
+                <label className="block text-[#2b2824] font-bold mb-2">
                   Your Message
                 </label>
                 <textarea
@@ -206,35 +209,33 @@ const Contact = () => {
                   onBlur={handleBlur}
                   rows="5"
                   placeholder="Type your message here..."
-                  className={`w-full px-4 py-3 rounded-lg border resize-none
-                    focus:outline-none focus:ring-2 transition
+                  className={`w-full px-5 py-4 rounded-xl border-2 bg-white/50 resize-none
+                    focus:outline-none transition-colors
                     ${
                       errors.message && touched.message
-                        ? "border-red-500 focus:ring-red-300"
-                        : "border-[#EADBC8] focus:ring-[#8B5E3C]"
+                        ? "border-[#f8b4b4] focus:border-[#f8b4b4]"
+                        : "border-[#e6dfce] focus:border-[#cce3de]"
                     }`}
                 />
-                <div className="flex justify-between mt-1">
+                <div className="flex justify-between mt-2">
                   {errors.message && touched.message && (
-                    <p className="text-red-500 text-sm">
+                    <p className="text-[#f8b4b4] text-sm font-bold">
                       {errors.message}
                     </p>
                   )}
-                  <p className="text-gray-500 text-sm ml-auto">
+                  <p className="text-[#a39a90] text-sm ml-auto font-medium">
                     {formData.message.length}/500
                   </p>
                 </div>
               </div>
 
               {/* Button */}
-              <div className="text-center pt-4">
+              <div className="text-center pt-6">
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className={`bg-[#5C3A21] hover:bg-[#8B5E3C]
-                             text-white font-semibold px-10 py-3
-                             rounded-full shadow-md transition
-                             transform hover:scale-105
+                  className={`btn-primary bg-[#cce3de] hover:bg-[#b0d4cc] text-[#2b2824] w-full font-bold px-10 py-4
+                             rounded-full shadow-soft transition-all duration-300
                              disabled:opacity-50 disabled:cursor-not-allowed
                              disabled:transform-none`}
                 >

@@ -10,6 +10,22 @@ const ShopContextProvider = ({ children }) => {
 
   const [products, setProducts] = useState([]);
   const [cartitems, setCartItems] = useState({});
+  const [wishlist, setWishlist] = useState(() => {
+    try {
+      const saved = localStorage.getItem('wishlist');
+      return saved ? JSON.parse(saved) : [];
+    } catch (error) {
+      console.error("Failed to parse wishlist from local storage", error);
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem('wishlist', JSON.stringify(wishlist));
+  }, [wishlist]);
+
+  const [search, setSearch] = useState("");
+  const [showSearch, setShowSearch] = useState(false);
 
   /* ---------- FETCH PRODUCTS ---------- */
   const fetchProducts = async () => {
@@ -103,9 +119,23 @@ const ShopContextProvider = ({ children }) => {
     setCartItems({});
   };
 
+  /* ---------- WISHLIST ---------- */
+  const toggleWishlist = (productId) => {
+    setWishlist((prev) => 
+      prev.includes(productId) 
+        ? prev.filter(id => id !== productId)
+        : [...prev, productId]
+    );
+  };
+
+  const isInWishlist = (productId) => wishlist.includes(productId);
+
   const value = {
     products,
     cartitems,
+    wishlist,
+    search, setSearch,
+    showSearch, setShowSearch,
     currency,
     delivery_fee,
     backendUrl, // Export this so other components can use it
@@ -116,6 +146,8 @@ const ShopContextProvider = ({ children }) => {
     getCartCount,
     clearCart,
     refreshProducts,
+    toggleWishlist,
+    isInWishlist,
   };
 
   return (
